@@ -1,7 +1,7 @@
 import { Column, Entity, Generated, PrimaryColumn } from 'typeorm';
-import { RegisterUserDto } from 'src/modules/auth/dtos/RegisterUser.dto';
 import BaseEntityModel from '../base-entity-model';
-import ROLE from 'src/lib/enums/role.enum';
+import { RegisterUserDto } from '../../modules/auth/dtos/RegisterUser.dto';
+import ROLE from '../../lib/enums/role.enum';
 
 @Entity()
 export default class User extends BaseEntityModel {

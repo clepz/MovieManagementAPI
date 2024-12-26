@@ -10,7 +10,7 @@ import {
     VersionColumn,
 } from 'typeorm';
 import BaseModel from './base-model';
-import ENTITY_STATUS from 'src/lib/enums/entity-status.enum';
+import ENTITY_STATUS from '../lib/enums/entity-status.enum';
 
 export default abstract class BaseEntityModel extends BaseModel {
     @CreateDateColumn({ type: 'timestamp with time zone' })

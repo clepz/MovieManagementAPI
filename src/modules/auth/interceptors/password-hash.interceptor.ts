@@ -5,8 +5,8 @@ import {
     CallHandler,
 } from '@nestjs/common';
 import { Observable } from 'rxjs';
-import { hashPassword } from 'src/lib/utils/hash-password.util';
 import { RegisterUserDto } from '../dtos/RegisterUser.dto';
+import { hashPassword } from '../../../lib/utils/hash-password.util';
 
 @Injectable()
 export class PasswordHashInterceptor implements NestInterceptor {

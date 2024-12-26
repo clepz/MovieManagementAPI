@@ -14,10 +14,10 @@ interface Config {
         password: string;
         database: string;
     };
-    ACCESS_TOKEN_SECRET: string;
-    REFRESH_TOKEN_SECRET: string;
-    ACCESS_TOKEN_EXPIRES_IN: string;
-    REFRESH_TOKEN_EXPIRES_IN: string;
+    access_token_secret: string;
+    refresh_token_secret: string;
+    access_token_expires_in: string;
+    refresh_token_expires_in: string;
     log_dir: string;
     console_log_level: string;
 }
@@ -56,10 +56,10 @@ const appConfiguration: Config = {
         password: getEnvVar('DB_PASSWORD', 'password'),
         database: getEnvVar('DB_DB', 'database'),
     },
-    ACCESS_TOKEN_SECRET: getEnvVar('ACCESS_TOKEN_SECRET'),
-    REFRESH_TOKEN_SECRET: getEnvVar('REFRESH_TOKEN_SECRET'),
-    ACCESS_TOKEN_EXPIRES_IN: getEnvVar('ACCESS_TOKEN_EXPIRES_IN'),
-    REFRESH_TOKEN_EXPIRES_IN: getEnvVar('REFRESH_TOKEN_EXPIRES_IN'),
+    access_token_secret: getEnvVar('ACCESS_TOKEN_SECRET'),
+    refresh_token_secret: getEnvVar('REFRESH_TOKEN_SECRET'),
+    access_token_expires_in: getEnvVar('ACCESS_TOKEN_EXPIRES_IN'),
+    refresh_token_expires_in: getEnvVar('REFRESH_TOKEN_EXPIRES_IN'),
     log_dir: getEnvVar('LOG_DIR', './logs'),
     console_log_level: getEnvVar(
         'CONSOLE_LOG_LEVEL',

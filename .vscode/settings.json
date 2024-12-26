@@ -3,6 +3,7 @@
     "editor.codeActionsOnSave": {
         "source.fixAll.eslint": "always"
     },
+    "typescript.preferences.importModuleSpecifier": "relative",
     "search.exclude": {
         "**/node_modules": true,
         "**/bower_components": true,
