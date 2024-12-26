@@ -1,0 +1,24 @@
+services:
+  backend_prod:
+    build:
+      context: .
+      target: backend-prod
+    volumes:
+      - /app/node_modules
+    ports:
+      - "3002:3000"
+    environment:
+      - NODE_ENV=production
+    env_file:
+      - .env.prod
+    networks:
+      - default
+      - backend_network_prod
+    restart: unless-stopped
+    command: yarn start:prod
+
+networks:
+  default:
+  backend_network_prod:
+    name: backend_network_prod
+    external: true
