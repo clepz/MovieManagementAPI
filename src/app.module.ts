@@ -1,12 +1,12 @@
 import { Module } from '@nestjs/common';
-import { UsersModule } from './modules/users/users.module';
-import { AuthModule } from './modules/auth/auth.module';
+import { UsersModule } from './infrastructure/http/modules/users.module';
+import { AuthModule } from './infrastructure/auth/auth.module';
 import { ConfigModule } from '@nestjs/config';
-import appConfiguration from './config/configuration';
+import appConfiguration from './shared/config/configuration';
 import { TypeOrmModule } from '@nestjs/typeorm';
-import typeormConfig from './config/typeorm-config';
+import typeormConfig from './infrastructure/database/typeorm-config';
 import { ThrottlerModule } from '@nestjs/throttler';
-import { ThrottlerBehindProxyGuard } from './guards/throttler-behind-proxy.guard';
+import { ThrottlerBehindProxyGuard } from './infrastructure/http/guards/throttler-behind-proxy.guard';
 
 @Module({
     imports: [
