@@ -5,7 +5,7 @@ import {
     CallHandler,
 } from '@nestjs/common';
 import { Observable } from 'rxjs';
-import { RegisterUserDto } from '../../../application/dtos/RegisterUser.dto';
+import { RegisterUserDto } from '../../../application/dtos/register-user.dto';
 import { hashPassword } from '../../../shared/utils/hash-password.util';
 
 @Injectable()

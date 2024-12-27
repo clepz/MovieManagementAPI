@@ -1,6 +1,6 @@
 import { HttpException, Inject, Injectable } from '@nestjs/common';
-import { RegisterUserDto } from '../../application/dtos/RegisterUser.dto';
-import SignInDto from '../../application/dtos/SignIn.dto';
+import { RegisterUserDto } from '../../application/dtos/register-user.dto';
+import SignInDto from '../../application/dtos/sign-in.dto';
 import { TokenService } from './token.service';
 import User from '../../domain/entities/user.entity';
 import { comparePassword } from '../../shared/utils/hash-password.util';

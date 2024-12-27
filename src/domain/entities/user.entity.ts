@@ -1,6 +1,6 @@
 import { Column, Entity, Generated, PrimaryColumn } from 'typeorm';
 import BaseEntityModel from './base-entity-model';
-import { RegisterUserDto } from '../../application/dtos/RegisterUser.dto';
+import { RegisterUserDto } from '../../application/dtos/register-user.dto';
 import ROLE from '../../shared/enums/role.enum';
 
 @Entity()
