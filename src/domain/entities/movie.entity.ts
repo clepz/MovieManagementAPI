@@ -18,7 +18,6 @@ export default class Movie extends BaseEntityModel {
 
     @OneToMany(() => MovieSession, (session) => session.movie, {
         cascade: ['insert', 'soft-remove'],
-        onDelete: 'CASCADE',
     })
     sessions: MovieSession[];
 }

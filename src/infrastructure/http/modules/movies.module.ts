@@ -6,10 +6,18 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import Movie from '../../../domain/entities/movie.entity';
 import Room from '../../../domain/entities/room.entity';
 import DeleteMovieUseCase from '../../../application/use-cases/delete-movie.use-case';
+import RoomRepositoryImpl from '../../database/room.repository.impl';
+import RoomService from '../../../domain/services/room.service';
 
 @Module({
     imports: [TypeOrmModule.forFeature([Movie, Room])],
     controllers: [MoviesController],
-    providers: [MovieRepositoryImpl, AddMovieUseCase, DeleteMovieUseCase],
+    providers: [
+        MovieRepositoryImpl,
+        RoomRepositoryImpl,
+        AddMovieUseCase,
+        DeleteMovieUseCase,
+        RoomService,
+    ],
 })
 export class MoviesModule {}
