@@ -23,12 +23,4 @@ export default class User extends BaseEntityModel {
 
     @Column({ type: 'varchar', default: ROLE.customer })
     role: ROLE;
-
-    static fromRegisterUserDto(body: RegisterUserDto) {
-        const user = new User();
-        user.username = body.username;
-        user.password = body.password;
-        user.age = body.age;
-        return user;
-    }
 }

@@ -22,6 +22,6 @@ export class UsersController {
     @CheckRole([ROLE.customer])
     // @ApiHeader({ name: 'Authorization', required: true })
     async getOne(@Req() req) {
-        return 'qqq';
+        return 'test';
     }
 }

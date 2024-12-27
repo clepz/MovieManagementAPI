@@ -10,8 +10,8 @@ const typeormConfig: TypeOrmModuleAsyncOptions = {
         username: configService.get('database.user'),
         password: configService.get('database.password'),
         database: configService.get('database.database'),
-        autoLoadEntities: true,
         synchronize: true,
+        entities: [__dirname + '/../../domain/entities/*.entity{.ts,.js}'],
     }),
     inject: [ConfigService],
 };

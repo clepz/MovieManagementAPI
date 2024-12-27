@@ -7,11 +7,13 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import typeormConfig from './infrastructure/database/typeorm-config';
 import { ThrottlerModule } from '@nestjs/throttler';
 import { ThrottlerBehindProxyGuard } from './infrastructure/http/guards/throttler-behind-proxy.guard';
+import { MoviesModule } from './infrastructure/http/modules/movies.module';
 
 @Module({
     imports: [
         UsersModule,
         AuthModule,
+        MoviesModule,
         ConfigModule.forRoot({
             load: [appConfiguration],
             isGlobal: true,

@@ -3,12 +3,15 @@ import { AppModule } from './app.module';
 import helmet from 'helmet';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 import { NestExpressApplication } from '@nestjs/platform-express';
+import { ValidationPipe } from '@nestjs/common';
 
 async function bootstrap() {
     const app = await NestFactory.create<NestExpressApplication>(AppModule);
     app.set('trust proxy', 'loopback'); // Trust requests from the loopback address
     app.enableCors();
     app.use(helmet());
+    app.useGlobalPipes(new ValidationPipe());
+    app.setGlobalPrefix('api');
     const config = new DocumentBuilder()
         .setTitle('Movie Management API')
         .setDescription('The movie management API documentation')

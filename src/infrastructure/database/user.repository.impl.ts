@@ -8,8 +8,8 @@ import { Repository } from 'typeorm';
 export default class UserRepositoryImpl extends BaseRepository<User> {
     constructor(
         @InjectRepository(User)
-        private readonly _repository: Repository<User>,
+        protected readonly repository: Repository<User>,
     ) {
-        super(_repository);
+        super();
     }
 }

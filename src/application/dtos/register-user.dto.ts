@@ -1,8 +1,8 @@
 import { ApiProperty } from '@nestjs/swagger';
 import {
+    IsInt,
     IsLowercase,
     IsNotEmpty,
-    IsNumber,
     IsOptional,
     IsString,
     IsStrongPassword,
@@ -21,7 +21,7 @@ export class RegisterUserDto {
 
     @ApiProperty({ description: 'Age must be at least 5' })
     @IsNotEmpty()
-    @IsNumber()
+    @IsInt()
     @Min(5)
     age: number;
 

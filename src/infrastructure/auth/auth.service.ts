@@ -1,10 +1,10 @@
-import { HttpException, Inject, Injectable } from '@nestjs/common';
+import { HttpException, Injectable } from '@nestjs/common';
 import { RegisterUserDto } from '../../application/dtos/register-user.dto';
 import SignInDto from '../../application/dtos/sign-in.dto';
 import { TokenService } from './token.service';
-import User from '../../domain/entities/user.entity';
 import { comparePassword } from '../../shared/utils/hash-password.util';
 import UserRepositoryImpl from '../database/user.repository.impl';
+import UserMapper from '../../application/mappers/user.mapper';
 
 @Injectable()
 export class AuthService {
@@ -14,7 +14,7 @@ export class AuthService {
     ) {}
 
     async register(body: RegisterUserDto) {
-        await this.userRepository.save(User.fromRegisterUserDto(body));
+        await this.userRepository.save(UserMapper.fromRegisterUserDto(body));
     }
 
     async validateUserByPassword(body: SignInDto) {
