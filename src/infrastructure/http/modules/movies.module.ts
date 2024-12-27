@@ -8,6 +8,7 @@ import Room from '../../../domain/entities/room.entity';
 import DeleteMovieUseCase from '../../../application/use-cases/delete-movie.use-case';
 import RoomRepositoryImpl from '../../database/room.repository.impl';
 import RoomService from '../../../domain/services/room.service';
+import MovieService from '../../../domain/services/movie.service';
 
 @Module({
     imports: [TypeOrmModule.forFeature([Movie, Room])],
@@ -18,6 +19,7 @@ import RoomService from '../../../domain/services/room.service';
         AddMovieUseCase,
         DeleteMovieUseCase,
         RoomService,
+        MovieService,
     ],
 })
 export class MoviesModule {}

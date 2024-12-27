@@ -2,7 +2,6 @@ import { ApiProperty } from '@nestjs/swagger';
 import { Type } from 'class-transformer';
 import {
     IsArray,
-    IsDate,
     IsEnum,
     IsInt,
     IsISO8601,
@@ -14,8 +13,8 @@ import {
 } from 'class-validator';
 import TIME_SLOT from '../../shared/enums/time-slots.enum';
 
-class MovieSessionDto {
-    @ApiProperty({ example: '2021-12-31' })
+export class MovieSessionDto {
+    @ApiProperty({ example: '2021-12-31', type: 'string', format: 'date' })
     @IsString()
     @IsNotEmpty()
     @IsISO8601()

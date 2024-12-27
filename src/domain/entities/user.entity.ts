@@ -1,7 +1,7 @@
-import { Column, Entity, Generated, PrimaryColumn } from 'typeorm';
+import { Column, Entity, Generated, OneToMany, PrimaryColumn } from 'typeorm';
 import BaseEntityModel from './base-entity-model';
-import { RegisterUserDto } from '../../application/dtos/register-user.dto';
 import ROLE from '../../shared/enums/role.enum';
+import Ticket from './ticket.entity';
 
 @Entity()
 export default class User extends BaseEntityModel {
@@ -23,4 +23,7 @@ export default class User extends BaseEntityModel {
 
     @Column({ type: 'varchar', default: ROLE.customer })
     role: ROLE;
+
+    @OneToMany(() => Ticket, (ticket) => ticket.session)
+    tickets: Ticket[];
 }

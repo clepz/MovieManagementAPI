@@ -3,6 +3,7 @@ import { ConfigService } from '@nestjs/config';
 import { JwtService } from '@nestjs/jwt';
 import { AuthPayload } from '../../shared/interfaces/auth.interface';
 import UserRepositoryImpl from '../database/user.repository.impl';
+import { TokensResponseDto } from '../../application/dtos/response/login-response.dto';
 
 @Injectable()
 export class TokenService {
@@ -11,7 +12,7 @@ export class TokenService {
         private readonly configService: ConfigService,
         private readonly userRepository: UserRepositoryImpl,
     ) {}
-    async generateToken(userId: string) {
+    async generateToken(userId: string): Promise<TokensResponseDto> {
         const user = await this.userRepository.findOneBy({ id: userId }); // cache should be used
         const jwtPayload: AuthPayload = {
             sub: userId,

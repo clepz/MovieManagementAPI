@@ -1,6 +1,7 @@
 import MovieSession from '../../domain/entities/movie-session.entity';
 import Movie from '../../domain/entities/movie.entity';
 import { AddMovieDto } from '../dtos/add-movie.dto';
+import { ModifyMovieDto } from '../dtos/modify-movie.dto';
 
 export default class MovieMapper {
     static fromAddMovieDto(movieDto: AddMovieDto, userId: string): Movie {
@@ -17,6 +18,18 @@ export default class MovieMapper {
             movieSession.payload = { userId };
             return movieSession;
         });
+        return movie;
+    }
+
+    static fromModifyMovieDto(
+        modifiedMovie: ModifyMovieDto,
+        userId: string,
+    ): Movie {
+        const movie = new Movie();
+        movie.payload = { userId };
+        movie.title = modifiedMovie.title;
+        movie.description = modifiedMovie.description;
+        movie.ageRestriction = modifiedMovie.ageRestriction;
         return movie;
     }
 }

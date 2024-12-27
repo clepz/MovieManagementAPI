@@ -5,6 +5,7 @@ import { TokenService } from './token.service';
 import { comparePassword } from '../../shared/utils/hash-password.util';
 import UserRepositoryImpl from '../database/user.repository.impl';
 import UserMapper from '../../application/mappers/user.mapper';
+import { TokensResponseDto } from '../../application/dtos/response/login-response.dto';
 
 @Injectable()
 export class AuthService {
@@ -27,7 +28,7 @@ export class AuthService {
         return user;
     }
 
-    async signIn(body: SignInDto) {
+    async signIn(body: SignInDto): Promise<TokensResponseDto> {
         const user = await this.validateUserByPassword(body);
         if (!user) {
             throw new HttpException('Invalid username or password', 400);

@@ -1,8 +1,8 @@
 import { Injectable } from '@nestjs/common';
 
 @Injectable()
-export default class BuyTicketUseCase {
+export default class WatchMovieUseCase {
     async execute(): Promise<void> {
-        console.log('Buying ticket...');
+        console.log('Watching movie...');
     }
 }

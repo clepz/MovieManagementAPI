@@ -51,6 +51,7 @@ export default class AddMovieUseCase {
             await this.movieRepository.save(movieEntity);
         } catch (error) {
             if (error.code === '23505') {
+                // eslint-disable-next-line @typescript-eslint/no-unsafe-call
                 const timeDetailMessage = error.detail
                     .match(/=\((.*?)\) already/)[1]
                     .replace(', null', '') as string;

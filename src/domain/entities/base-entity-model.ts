@@ -48,5 +48,6 @@ export default abstract class BaseEntityModel extends BaseModel {
     @BeforeUpdate()
     beforeUpdate() {
         this.updatedBy = this.payload?.userId; // payload can be null if the api is public
+        delete this.payload;
     }
 }

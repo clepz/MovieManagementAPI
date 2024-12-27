@@ -16,4 +16,17 @@ export default class MovieRepositoryImpl extends BaseRepository<Movie> {
     async removeMovie(id: string): Promise<boolean> {
         return await this.softRemove(id, ['sessions']);
     }
+
+    async findByIdWithSessions(id: string): Promise<Movie> {
+        return await this.repository.findOne({
+            where: { id },
+            relations: ['sessions'],
+        });
+    }
+
+    async getAllAvailableMovies(): Promise<Movie[]> {
+        return await this.repository.find({
+            relations: ['sessions'],
+        });
+    }
 }

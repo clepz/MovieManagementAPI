@@ -3,6 +3,8 @@ import {
     Entity,
     JoinColumn,
     ManyToOne,
+    OneToMany,
+    OneToOne,
     PrimaryGeneratedColumn,
     Unique,
 } from 'typeorm';
@@ -10,6 +12,7 @@ import BaseEntityModel from './base-entity-model';
 import Movie from './movie.entity';
 import TIME_SLOT from '../../shared/enums/time-slots.enum';
 import Room from './room.entity';
+import Ticket from './ticket.entity';
 
 @Entity()
 @Unique('unique_movie_session_constraint', [
@@ -41,4 +44,7 @@ export default class MovieSession extends BaseEntityModel {
 
     @Column('int', { unsigned: true, nullable: false })
     roomNumber: number;
+
+    @OneToMany(() => Ticket, (ticket) => ticket.session)
+    tickets: Ticket[];
 }
