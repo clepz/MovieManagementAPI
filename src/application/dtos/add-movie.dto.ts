@@ -20,7 +20,7 @@ export class MovieSessionDto {
     @IsISO8601()
     date: string;
 
-    @ApiProperty()
+    @ApiProperty({ enum: TIME_SLOT })
     @IsString()
     @IsNotEmpty()
     @IsEnum(TIME_SLOT)

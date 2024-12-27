@@ -9,6 +9,7 @@ import DeleteMovieUseCase from '../../../application/use-cases/delete-movie.use-
 import RoomRepositoryImpl from '../../database/room.repository.impl';
 import RoomService from '../../../domain/services/room.service';
 import MovieService from '../../../domain/services/movie.service';
+import AddMovieBulkUseCase from '../../../application/use-cases/add-movie-bulk.use-case';
 
 @Module({
     imports: [TypeOrmModule.forFeature([Movie, Room])],
@@ -17,6 +18,7 @@ import MovieService from '../../../domain/services/movie.service';
         MovieRepositoryImpl,
         RoomRepositoryImpl,
         AddMovieUseCase,
+        AddMovieBulkUseCase,
         DeleteMovieUseCase,
         RoomService,
         MovieService,
