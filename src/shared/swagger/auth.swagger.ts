@@ -4,7 +4,7 @@ export const RegisterUserSwagger: ApiCustomSwaggerDoc = {
         operation: {
             summary: 'Register a new user',
             description:
-                'Registers a new user and returns the user details.<br>Password must be a strong password.',
+                'Registers a new user and returns the user details.<br>Password must be a strong password.<br>Role will be "customer" by default.',
         },
     },
 };

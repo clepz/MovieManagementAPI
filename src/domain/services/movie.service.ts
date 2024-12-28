@@ -8,7 +8,7 @@ import MovieMapper from '../mappers/movie.mapper';
 export default class MovieService {
     constructor(private readonly movieRepository: MovieRepositoryImpl) {}
 
-    async getMovies(): Promise<Movie[]> {
+    async getAllAvailableMovies(): Promise<Movie[]> {
         return this.movieRepository.getAllAvailableMovies();
     }
 

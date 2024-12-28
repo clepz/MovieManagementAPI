@@ -115,7 +115,7 @@ export class MoviesController {
     })
     @Get('')
     async getAllMovies() {
-        const movies = await this.movieService.getMovies();
+        const movies = await this.movieService.getAllAvailableMovies();
         return movies.map((movie) => plainToInstance(MovieResponseDto, movie));
     }
 
