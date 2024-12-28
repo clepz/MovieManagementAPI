@@ -1,4 +1,4 @@
-import { HttpException, Injectable } from '@nestjs/common';
+import { BadRequestException, HttpException, Injectable } from '@nestjs/common';
 import { RegisterUserDto } from '../../application/dtos/register-user.dto';
 import SignInDto from '../../application/dtos/sign-in.dto';
 import { TokenService } from './token.service';
@@ -23,7 +23,7 @@ export class AuthService {
             username: body.username,
         });
         if (!user || !(await comparePassword(body.password, user.password))) {
-            throw new HttpException('Invalid username or password', 400);
+            throw new BadRequestException('Invalid username or password');
         }
         return user;
     }
@@ -31,7 +31,7 @@ export class AuthService {
     async signIn(body: SignInDto): Promise<TokensResponseDto> {
         const user = await this.validateUserByPassword(body);
         if (!user) {
-            throw new HttpException('Invalid username or password', 400);
+            throw new BadRequestException('Invalid username or password');
         }
         return this.tokenService.generateToken(user.id);
     }

@@ -2,7 +2,9 @@ import {
     Body,
     Controller,
     HttpCode,
+    HttpException,
     HttpStatus,
+    NotFoundException,
     Post,
     UseGuards,
     UseInterceptors,
@@ -35,6 +37,7 @@ import {
     RegisterUserSwagger,
     SignInUserSwagger,
 } from '../../shared/swagger/auth.swagger';
+import { LoggerService } from '../../shared/services/custom-logger.service';
 
 @ApiTags('Auth')
 @Controller('auth')
@@ -42,6 +45,7 @@ export class AuthController {
     constructor(
         private readonly authService: AuthService,
         private readonly tokenService: TokenService,
+        private readonly logger: LoggerService,
     ) {}
 
     @ApiBody({ type: RegisterUserDto })
@@ -87,6 +91,7 @@ export class AuthController {
     @Post('refresh')
     @HttpCode(HttpStatus.OK)
     refreshTokens(@GetCurrentUserId() userId: string) {
+        throw new NotFoundException('Not implemented');
         const tokens = this.tokenService.generateToken(userId);
         return plainToInstance(TokensResponseDto, tokens);
     }
