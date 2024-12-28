@@ -1,9 +1,9 @@
-import TIME_SLOT from '../../shared/enums/time-slots.enum';
+import TimeSlot from '../../shared/enums/time-slots.enum';
 
 export class MovieSessionVO {
     constructor(
         private readonly date: string,
-        private readonly time: TIME_SLOT,
+        private readonly time: TimeSlot,
         private readonly roomNumber: number,
     ) {}
 

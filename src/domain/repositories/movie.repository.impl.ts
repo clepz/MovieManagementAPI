@@ -25,8 +25,9 @@ export default class MovieRepositoryImpl extends BaseRepository<Movie> {
     }
 
     async getAllAvailableMovies(): Promise<Movie[]> {
-        return await this.repository.find({
-            relations: ['sessions'],
-        });
+        return await this.repository
+            .createQueryBuilder('movie')
+            .innerJoinAndSelect('movie.sessions', 'session')
+            .getMany();
     }
 }

@@ -10,7 +10,7 @@ import {
 } from 'typeorm';
 import BaseEntityModel from './base-entity-model';
 import Movie from './movie.entity';
-import TIME_SLOT from '../../shared/enums/time-slots.enum';
+import TimeSlot from '../../shared/enums/time-slots.enum';
 import Room from './room.entity';
 import Ticket from './ticket.entity';
 
@@ -29,7 +29,7 @@ export default class MovieSession extends BaseEntityModel {
     date: string;
 
     @Column('varchar', { length: 11 })
-    time: TIME_SLOT;
+    time: TimeSlot;
 
     @Column()
     movieId: string;

@@ -21,7 +21,6 @@ async function bootstrap() {
         .setTitle('Movie Management API')
         .setDescription('The movie management API documentation')
         .setVersion('1.0')
-        .addTag('movies')
         .addBearerAuth({
             description: 'Please enter access token.',
             name: 'Authorization',

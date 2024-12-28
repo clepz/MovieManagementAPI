@@ -52,7 +52,7 @@ export default class MovieSessionService {
         userId: string,
     ) {
         const promises = [
-            this.movieSessionRepository.findByIdWithMovie(id, movieId),
+            this.movieSessionRepository.findByIdAndMovieId(id, movieId),
         ] as Array<Promise<MovieSession | boolean>>;
         if (modifiedMovieSession.roomNumber) {
             promises.push(

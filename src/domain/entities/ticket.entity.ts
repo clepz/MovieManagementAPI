@@ -27,4 +27,7 @@ export default class Ticket extends BaseEntityModel {
 
     @Column()
     userId: string;
+
+    // status.active -> indicates that the ticket is active
+    // status.inactive -> indicates that the ticket is used.
 }

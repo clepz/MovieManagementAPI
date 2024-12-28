@@ -8,7 +8,7 @@ import {
     IsPositive,
     IsOptional,
 } from 'class-validator';
-import TIME_SLOT from '../../shared/enums/time-slots.enum';
+import TimeSlot from '../../shared/enums/time-slots.enum';
 
 export class ModifyMovieSessionDto {
     @ApiProperty({ example: '2021-12-31', type: 'string', format: 'date' })
@@ -18,12 +18,12 @@ export class ModifyMovieSessionDto {
     @IsOptional()
     date: string;
 
-    @ApiProperty({ enum: TIME_SLOT })
+    @ApiProperty({ enum: TimeSlot })
     @IsString()
     @IsNotEmpty()
-    @IsEnum(TIME_SLOT)
+    @IsEnum(TimeSlot)
     @IsOptional()
-    time: TIME_SLOT;
+    time: TimeSlot;
 
     @ApiProperty({ description: 'Room number must be an existing roomId' })
     @IsInt()

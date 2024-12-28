@@ -15,16 +15,19 @@ import Role from '../../../shared/enums/role.enum';
 import { GetCurrentUserId } from '../decorators/get-current-user-id.decorator';
 import {
     ApiBearerAuth,
-    ApiBadRequestResponse,
     ApiConflictResponse,
     ApiParam,
-    ApiNoContentResponse,
-    ApiNotFoundResponse,
-    ApiCreatedResponse,
+    ApiOperation,
+    ApiResponse,
 } from '@nestjs/swagger';
 import { MovieSessionDto } from '../../../application/dtos/add-movie.dto';
 import MovieSessionService from '../../../domain/services/movie-session.service';
 import { ModifyMovieSessionDto } from '../../../application/dtos/modify-movie-session.dto';
+import {
+    AddMovieSessionSwagger,
+    DeleteMovieSessionSwagger,
+    UpdateMovieSessionSwagger,
+} from '../../../shared/swagger/movie-session.swagger';
 
 @ApiParam({ name: 'movieId', schema: { format: 'uuid' } })
 @Controller('movies/:movieId/sessions')
@@ -32,9 +35,11 @@ export class MovieSessionController {
     constructor(private readonly movieSessionService: MovieSessionService) {}
 
     @ApiBearerAuth()
-    @ApiCreatedResponse({ description: 'Movie Session created' })
-    @ApiBadRequestResponse({ description: 'Bad Request' })
-    @ApiConflictResponse({
+    @ApiOperation(AddMovieSessionSwagger.POST.operation)
+    @ApiResponse({ status: 201, description: 'Movie Session created' })
+    @ApiResponse({ status: 400, description: 'Bad Request' })
+    @ApiResponse({
+        status: 409,
         description: 'There is another movie session that conflicts',
     })
     @Post('')
@@ -52,8 +57,9 @@ export class MovieSessionController {
         );
     }
     @ApiBearerAuth()
-    @ApiNoContentResponse({ description: 'Movie Session deleted' })
-    @ApiNotFoundResponse({ description: 'Movie Session not found' })
+    @ApiOperation(DeleteMovieSessionSwagger.DELETE.operation)
+    @ApiResponse({ status: 204, description: 'Movie Session deleted' })
+    @ApiResponse({ status: 404, description: 'Movie Session not found' })
     @ApiParam({ name: 'id', schema: { format: 'uuid' } })
     @Delete('/:id')
     @CheckRole([Role.MANAGER])
@@ -74,8 +80,9 @@ export class MovieSessionController {
     }
     @ApiBearerAuth()
     @ApiParam({ name: 'id', schema: { format: 'uuid' } })
-    @ApiNoContentResponse({ description: 'Movie Session modified' })
-    @ApiNotFoundResponse({ description: 'Movie Session not found' })
+    @ApiOperation(UpdateMovieSessionSwagger.PATCH.operation)
+    @ApiResponse({ status: 204, description: 'Movie Session modified' })
+    @ApiResponse({ status: 404, description: 'Movie Session not found' })
     @Patch('/:id')
     @CheckRole([Role.MANAGER])
     @HttpCode(HttpStatus.NO_CONTENT)

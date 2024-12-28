@@ -3,7 +3,7 @@ import { AddMovieDto } from '../dtos/add-movie.dto';
 import {
     BulkOperationResponseDto,
     IndividualOperationResponseDto,
-} from '../dtos/response/bulk-operation.dto';
+} from '../dtos/response/bulk-operation-response.dto';
 import AddMovieUseCase from './add-movie.use-case';
 
 @Injectable()

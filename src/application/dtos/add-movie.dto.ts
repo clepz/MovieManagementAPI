@@ -11,7 +11,7 @@ import {
     IsString,
     ValidateNested,
 } from 'class-validator';
-import TIME_SLOT from '../../shared/enums/time-slots.enum';
+import TimeSlot from '../../shared/enums/time-slots.enum';
 
 export class MovieSessionDto {
     @ApiProperty({ example: '2021-12-31', type: 'string', format: 'date' })
@@ -20,11 +20,11 @@ export class MovieSessionDto {
     @IsISO8601()
     date: string;
 
-    @ApiProperty({ enum: TIME_SLOT })
+    @ApiProperty({ enum: TimeSlot })
     @IsString()
     @IsNotEmpty()
-    @IsEnum(TIME_SLOT)
-    time: TIME_SLOT;
+    @IsEnum(TimeSlot)
+    time: TimeSlot;
 
     @ApiProperty({ description: 'Room number must be an existing roomId' })
     @IsInt()

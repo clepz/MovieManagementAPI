@@ -21,12 +21,19 @@ export default class MovieSessionRepositoryImpl extends BaseRepository<MovieSess
         return await this.softRemove({ id, movieId }, [], userId);
     }
 
-    async findByIdWithMovie(
+    async findByIdAndMovieId(
         id: string,
         movieId: string,
     ): Promise<MovieSession> {
         return await this.repository.findOne({
             where: { id, movieId },
+        });
+    }
+
+    async findByIdWithMovie(id: string): Promise<MovieSession> {
+        return await this.repository.findOne({
+            where: { id },
+            relations: ['movie'],
         });
     }
 }

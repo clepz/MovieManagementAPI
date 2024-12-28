@@ -12,13 +12,9 @@ import {
     Post,
 } from '@nestjs/common';
 import {
-    ApiBadRequestResponse,
     ApiBearerAuth,
     ApiBody,
-    ApiConflictResponse,
-    ApiCreatedResponse,
-    ApiNoContentResponse,
-    ApiNotFoundResponse,
+    ApiOperation,
     ApiParam,
     ApiResponse,
 } from '@nestjs/swagger';
@@ -32,8 +28,16 @@ import MovieService from '../../../domain/services/movie.service';
 import { plainToInstance } from 'class-transformer';
 import { MovieResponseDto } from '../../../application/dtos/response/movies-response.dto';
 import { ModifyMovieDto } from '../../../application/dtos/modify-movie.dto';
-import { BulkOperationResponseDto } from '../../../application/dtos/response/bulk-operation.dto';
+import { BulkOperationResponseDto } from '../../../application/dtos/response/bulk-operation-response.dto';
 import AddMovieBulkUseCase from '../../../application/use-cases/add-movie-bulk.use-case';
+import {
+    AddMovieBulkSwagger,
+    AddMovieSwagger,
+    DeleteMovieSwagger,
+    GetAllMoviesSwagger,
+    GetMovieSwagger,
+    UpdateMovieSwagger,
+} from '../../../shared/swagger/movie.swagger';
 
 @Controller('movies')
 export class MoviesController {
@@ -45,9 +49,12 @@ export class MoviesController {
     ) {}
 
     @ApiBearerAuth()
-    @ApiCreatedResponse({ description: 'Movie created' })
-    @ApiBadRequestResponse({ description: 'Bad Request' })
-    @ApiConflictResponse({
+    @ApiOperation(AddMovieSwagger.POST.operation)
+    @ApiResponse({ status: 401, description: 'Unauthorized' })
+    @ApiResponse({ status: 201, description: 'Movie created' })
+    @ApiResponse({ status: 400, description: 'Bad Request' })
+    @ApiResponse({
+        status: 409,
         description: 'There is another movie session that conflicts',
     })
     @Post('')
@@ -61,9 +68,15 @@ export class MoviesController {
     }
 
     @ApiBearerAuth()
-    @ApiBadRequestResponse({ description: 'Bad Request' })
     @ApiBody({ type: AddMovieDto, isArray: true })
-    @ApiResponse({ type: BulkOperationResponseDto })
+    @ApiResponse({ status: 401, description: 'Unauthorized' })
+    @ApiResponse({
+        status: 201,
+        description: 'Movies added in bulk',
+        type: BulkOperationResponseDto,
+    })
+    @ApiResponse({ status: 400, description: 'Bad Request' })
+    @ApiOperation(AddMovieBulkSwagger.POST.operation)
     @Post('bulk')
     @HttpCode(HttpStatus.CREATED)
     @CheckRole([Role.MANAGER])
@@ -76,8 +89,10 @@ export class MoviesController {
     }
 
     @ApiBearerAuth()
-    @ApiNoContentResponse({ description: 'Movie deleted' })
-    @ApiNotFoundResponse({ description: 'Movie not found' })
+    @ApiOperation(DeleteMovieSwagger.DELETE.operation)
+    @ApiResponse({ status: 401, description: 'Unauthorized' })
+    @ApiResponse({ status: 204, description: 'Movie deleted' })
+    @ApiResponse({ status: 404, description: 'Movie not found' })
     @ApiParam({ name: 'id', schema: { format: 'uuid' } })
     @Delete('/:id')
     @CheckRole([Role.MANAGER])
@@ -90,7 +105,14 @@ export class MoviesController {
     }
 
     @ApiBearerAuth()
-    @ApiResponse({ type: MovieResponseDto, isArray: true })
+    @ApiOperation(GetAllMoviesSwagger.GET.operation)
+    @ApiResponse({ status: 401, description: 'Unauthorized' })
+    @ApiResponse({
+        status: 200,
+        description: 'List of movies',
+        type: MovieResponseDto,
+        isArray: true,
+    })
     @Get('')
     async getAllMovies() {
         const movies = await this.movieService.getMovies();
@@ -98,6 +120,14 @@ export class MoviesController {
     }
 
     @ApiBearerAuth()
+    @ApiOperation(GetMovieSwagger.GET.operation)
+    @ApiResponse({ status: 401, description: 'Unauthorized' })
+    @ApiResponse({
+        status: 200,
+        description: 'Movie details',
+        type: MovieResponseDto,
+    })
+    @ApiResponse({ status: 404, description: 'Movie not found' })
     @ApiParam({ name: 'id', schema: { format: 'uuid' } })
     @ApiResponse({ type: MovieResponseDto })
     @Get('/:id')
@@ -111,8 +141,10 @@ export class MoviesController {
 
     @ApiBearerAuth()
     @ApiParam({ name: 'id', schema: { format: 'uuid' } })
-    @ApiNoContentResponse({ description: 'Movie modified' })
-    @ApiNotFoundResponse({ description: 'Movie not found' })
+    @ApiOperation(UpdateMovieSwagger.PATCH.operation)
+    @ApiResponse({ status: 401, description: 'Unauthorized' })
+    @ApiResponse({ status: 204, description: 'Movie modified' })
+    @ApiResponse({ status: 404, description: 'Movie not found' })
     @Patch('/:id')
     @CheckRole([Role.MANAGER])
     @HttpCode(HttpStatus.NO_CONTENT)

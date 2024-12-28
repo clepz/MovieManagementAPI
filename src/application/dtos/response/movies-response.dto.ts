@@ -2,13 +2,13 @@ import { ApiProperty } from '@nestjs/swagger';
 import { Expose, Type } from 'class-transformer';
 
 export class MovieSessionResponseDto {
-    @ApiProperty()
+    @ApiProperty({ format: 'uuid' })
     @Expose()
     id: string;
 
     @ApiProperty({ type: 'string', format: 'date' })
     @Expose()
-    date: Date;
+    date: string;
 
     @ApiProperty()
     @Expose()
@@ -20,7 +20,7 @@ export class MovieSessionResponseDto {
 }
 
 export class MovieResponseDto {
-    @ApiProperty()
+    @ApiProperty({ format: 'uuid' })
     @Expose()
     id: string;
 

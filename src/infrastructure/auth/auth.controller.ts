@@ -9,7 +9,15 @@ import {
     UsePipes,
     ValidationPipe,
 } from '@nestjs/common';
-import { ApiBearerAuth, ApiBody, ApiResponse, ApiTags } from '@nestjs/swagger';
+import {
+    ApiBadRequestResponse,
+    ApiBearerAuth,
+    ApiBody,
+    ApiOperation,
+    ApiResponse,
+    ApiTags,
+    ApiTooManyRequestsResponse,
+} from '@nestjs/swagger';
 // import { TokenService } from '../../../modules/auth/services/token/token.service';
 import { PasswordHashInterceptor } from '../http/interceptors/password-hash.interceptor';
 import { TokenService } from './token.service';
@@ -22,6 +30,11 @@ import { GetCurrentUserId } from '../http/decorators/get-current-user-id.decorat
 import { RtGuard } from './guards/rt.guard';
 import { TokensResponseDto } from '../../application/dtos/response/login-response.dto';
 import { plainToInstance } from 'class-transformer';
+import {
+    RefreshTokensSwagger,
+    RegisterUserSwagger,
+    SignInUserSwagger,
+} from '../../shared/swagger/auth.swagger';
 
 @ApiTags('Auth')
 @Controller('auth')
@@ -32,6 +45,9 @@ export class AuthController {
     ) {}
 
     @ApiBody({ type: RegisterUserDto })
+    @ApiResponse({ status: 201, description: 'User registered' })
+    @ApiResponse({ status: 400, description: 'Bad Request' })
+    @ApiOperation(RegisterUserSwagger.POST.operation)
     @Post('register')
     @UsePipes(ValidationPipe)
     @UseInterceptors(PasswordHashInterceptor)
@@ -40,8 +56,14 @@ export class AuthController {
         await this.authService.register(body);
     }
 
-    @ApiBody({ type: SignInDto })
-    @ApiResponse({ status: HttpStatus.OK, type: TokensResponseDto })
+    @ApiOperation(SignInUserSwagger.POST.operation)
+    @ApiResponse({
+        status: 200,
+        description: 'User signed in',
+        type: TokensResponseDto,
+    })
+    @ApiResponse({ status: 400, description: 'Invalid username or password' })
+    @ApiResponse({ status: 429, description: 'Too many requests' })
     @Throttle({ default: { limit: 5, ttl: 60000 } })
     @Post('signin')
     @UsePipes(ValidationPipe)
@@ -53,7 +75,13 @@ export class AuthController {
     }
 
     @ApiBearerAuth('refresh-token')
-    @ApiResponse({ status: HttpStatus.OK, type: TokensResponseDto })
+    @ApiOperation(RefreshTokensSwagger.POST.operation)
+    @ApiResponse({
+        status: 200,
+        description: 'Tokens refreshed',
+        type: TokensResponseDto,
+    })
+    @ApiResponse({ status: 401, description: 'Unauthorized' })
     @Public()
     @UseGuards(RtGuard)
     @Post('refresh')
