@@ -10,7 +10,7 @@ import {
     VersionColumn,
 } from 'typeorm';
 import BaseModel from './base-model';
-import ENTITY_STATUS from '../../shared/enums/entity-status.enum';
+import EntityStatus from '../../shared/enums/entity-status.enum';
 
 export default abstract class BaseEntityModel extends BaseModel {
     @CreateDateColumn({ type: 'timestamp with time zone' })
@@ -26,17 +26,17 @@ export default abstract class BaseEntityModel extends BaseModel {
     @VersionColumn({ default: 1 })
     version: number;
     @Column('int', { default: 1 })
-    status: ENTITY_STATUS;
+    status: EntityStatus;
 
     @BeforeSoftRemove()
     beforeRemove() {
-        this.status = ENTITY_STATUS.DELETED;
+        this.status = EntityStatus.DELETED;
         this.updatedBy = this.payload?.userId;
     }
 
     @BeforeRecover()
     beforeRecover() {
-        this.status = ENTITY_STATUS.ACTIVE;
+        this.status = EntityStatus.ACTIVE;
         this.updatedBy = this.payload?.userId;
     }
 

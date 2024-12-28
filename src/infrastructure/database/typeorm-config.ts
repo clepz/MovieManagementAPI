@@ -12,6 +12,7 @@ const typeormConfig: TypeOrmModuleAsyncOptions = {
         database: configService.get('database.database'),
         synchronize: true,
         entities: [__dirname + '/../../domain/entities/*.entity{.ts,.js}'],
+        logging: true,
     }),
     inject: [ConfigService],
 };

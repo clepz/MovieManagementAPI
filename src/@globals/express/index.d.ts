@@ -1,4 +1,4 @@
-import ROLE from '../../shared/enums/role.enum';
+import Role from '../../shared/enums/role.enum';
 
 declare global {
     namespace Express {

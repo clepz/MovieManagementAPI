@@ -1,8 +1,8 @@
-import ROLE from '../enums/role.enum';
+import Role from '../enums/role.enum';
 
 export interface AuthPayload {
     sub: string;
-    role: ROLE;
+    role: Role;
 }
 
 export interface AuthPayloadWithRt extends AuthPayload {

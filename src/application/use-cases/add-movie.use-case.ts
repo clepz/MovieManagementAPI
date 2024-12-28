@@ -1,11 +1,13 @@
 import { Injectable } from '@nestjs/common';
-import MovieRepositoryImpl from '../../infrastructure/database/movie.repository.impl';
 import { AddMovieDto } from '../dtos/add-movie.dto';
 import { MovieSessionVO } from '../../domain/value-objects/movie-session.vo';
-import MovieMapper from '../mappers/movie.mapper';
 import RoomsNotExistsException from '../../shared/exceptions/rooms-not-exists.exception';
 import NotAvailableTimeForMovieSessionException from '../../shared/exceptions/not-available-time-for-movie-session.exception';
 import RoomService from '../../domain/services/room.service';
+import MovieRepositoryImpl from '../../domain/repositories/movie.repository.impl';
+import MovieMapper from '../../domain/mappers/movie.mapper';
+import movieSessionUniqueViolationMessageExtractAndThrow from '../../shared/utils/db-error-conflict-message-extract';
+import DbErrorCode from '../../shared/enums/db-error-code.enum';
 
 @Injectable()
 export default class AddMovieUseCase {
@@ -35,29 +37,17 @@ export default class AddMovieUseCase {
             return true;
         });
         // -- check if rooms exist
-        const existingRoomNumber = await this.roomService.getExistingRooms(
+        await this.roomService.checkIfRoomsExistOrThrow(
             Array.from(roomNumbersSet),
         );
-        const notExistRooms = Array.from(roomNumbersSet).filter(
-            (roomNumber) => !existingRoomNumber.includes(roomNumber),
-        );
-        if (notExistRooms.length) {
-            throw new RoomsNotExistsException(notExistRooms);
-        }
         // -- save movie
         const movieEntity = MovieMapper.fromAddMovieDto(movie, userId);
 
         try {
             await this.movieRepository.save(movieEntity);
         } catch (error) {
-            if (error.code === '23505') {
-                // eslint-disable-next-line @typescript-eslint/no-unsafe-call
-                const timeDetailMessage = error.detail
-                    .match(/=\((.*?)\) already/)[1]
-                    .replace(', null', '') as string;
-                throw new NotAvailableTimeForMovieSessionException(
-                    timeDetailMessage,
-                );
+            if (error.code === DbErrorCode.UNIQUE_VIOLATION) {
+                movieSessionUniqueViolationMessageExtractAndThrow(error);
             }
             throw error;
         }

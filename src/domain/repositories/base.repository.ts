@@ -35,14 +35,29 @@ export default abstract class BaseRepository<T extends BaseEntityModel> {
 
     // removing entity from the database can be dangerous. So each repository should expose this method manually
     protected async softRemove(
-        id: string | number,
+        where: Partial<T>,
         relations: string[],
+        deletedBy: string,
     ): Promise<boolean> {
         const entity = await this.repository.find({
-            where: { id } as FindOptionsWhere<T>,
+            where: where as FindOptionsWhere<T>,
             relations,
         });
-        return (await this.repository.softRemove(entity)).length > 0;
+        if (!entity || entity.length === 0) {
+            return false;
+        }
+        entity.forEach((e) => {
+            e.payload = { userId: deletedBy };
+        });
+        let ret: T[];
+        await this.repository.manager.transaction(
+            async (transactionalEntityManager) => {
+                // typeorm only updates deletedAt column if softRemove is used. So, we have to update the entity afterwords to save the changes like updatedBy and status
+                ret = await transactionalEntityManager.softRemove(entity);
+                if (ret.length) await transactionalEntityManager.save(entity);
+            },
+        );
+        return ret.length > 0;
     }
 
     async findById(id: string | number): Promise<T> {

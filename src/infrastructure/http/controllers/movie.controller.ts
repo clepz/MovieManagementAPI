@@ -24,7 +24,7 @@ import { AddMovieDto } from '../../../application/dtos/add-movie.dto';
 import AddMovieUseCase from '../../../application/use-cases/add-movie.use-case';
 import { GetCurrentUserId } from '../decorators/get-current-user-id.decorator';
 import { CheckRole } from '../decorators/check-role.decorator';
-import ROLE from '../../../shared/enums/role.enum';
+import Role from '../../../shared/enums/role.enum';
 import DeleteMovieUseCase from '../../../application/use-cases/delete-movie.use-case';
 import MovieService from '../../../domain/services/movie.service';
 import { plainToInstance } from 'class-transformer';
@@ -49,12 +49,12 @@ export class MoviesController {
     })
     @Post('')
     @HttpCode(HttpStatus.CREATED)
-    @CheckRole([ROLE.manager])
+    @CheckRole([Role.MANAGER])
     async addMovie(
         @Body() movie: AddMovieDto,
         @GetCurrentUserId() userId: string,
     ) {
-        return await this.addMovieUseCase.execute(movie, userId);
+        await this.addMovieUseCase.execute(movie, userId);
     }
 
     @ApiBearerAuth()
@@ -63,7 +63,7 @@ export class MoviesController {
     @ApiResponse({ type: BulkOperationResponseDto })
     @Post('bulk')
     @HttpCode(HttpStatus.CREATED)
-    @CheckRole([ROLE.manager])
+    @CheckRole([Role.MANAGER])
     async addMovieBulk(
         @Body() movies: AddMovieDto[],
         @GetCurrentUserId() userId: string,
@@ -75,10 +75,13 @@ export class MoviesController {
     @ApiBearerAuth()
     @ApiParam({ name: 'id', schema: { format: 'uuid' } })
     @Delete('/:id')
-    @CheckRole([ROLE.manager])
+    @CheckRole([Role.MANAGER])
     @HttpCode(HttpStatus.NO_CONTENT)
-    async deleteMovie(@Param('id', ParseUUIDPipe) id: string): Promise<void> {
-        await this.deleteMovieUseCase.execute(id);
+    async deleteMovie(
+        @Param('id', ParseUUIDPipe) id: string,
+        @GetCurrentUserId() userId: string,
+    ): Promise<void> {
+        await this.deleteMovieUseCase.execute(id, userId);
     }
 
     @ApiBearerAuth()
@@ -105,7 +108,7 @@ export class MoviesController {
     @ApiParam({ name: 'id', schema: { format: 'uuid' } })
     @ApiNoContentResponse({ description: 'Movie modified' })
     @Patch('/:id')
-    @CheckRole([ROLE.manager])
+    @CheckRole([Role.MANAGER])
     @HttpCode(HttpStatus.NO_CONTENT)
     async updateMovie(
         @Param('id', ParseUUIDPipe) id: string,

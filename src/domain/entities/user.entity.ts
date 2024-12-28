@@ -1,6 +1,6 @@
 import { Column, Entity, Generated, OneToMany, PrimaryColumn } from 'typeorm';
 import BaseEntityModel from './base-entity-model';
-import ROLE from '../../shared/enums/role.enum';
+import Role from '../../shared/enums/role.enum';
 import Ticket from './ticket.entity';
 
 @Entity()
@@ -21,8 +21,8 @@ export default class User extends BaseEntityModel {
     @Column({ unsigned: true })
     age: number;
 
-    @Column({ type: 'varchar', default: ROLE.customer })
-    role: ROLE;
+    @Column({ type: 'varchar', default: Role.CUSTOMER })
+    role: Role;
 
     @OneToMany(() => Ticket, (ticket) => ticket.session)
     tickets: Ticket[];

@@ -1,7 +1,7 @@
+import { AddMovieDto } from '../../application/dtos/add-movie.dto';
+import { ModifyMovieDto } from '../../application/dtos/modify-movie.dto';
 import MovieSession from '../../domain/entities/movie-session.entity';
 import Movie from '../../domain/entities/movie.entity';
-import { AddMovieDto } from '../dtos/add-movie.dto';
-import { ModifyMovieDto } from '../dtos/modify-movie.dto';
 
 export default class MovieMapper {
     static fromAddMovieDto(movieDto: AddMovieDto, userId: string): Movie {

@@ -1,5 +1,5 @@
+import { RegisterUserDto } from '../../application/dtos/register-user.dto';
 import User from '../../domain/entities/user.entity';
-import { RegisterUserDto } from '../dtos/register-user.dto';
 
 export default class UserMapper {
     static fromRegisterUserDto(body: RegisterUserDto) {

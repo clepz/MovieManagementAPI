@@ -3,9 +3,9 @@ import { RegisterUserDto } from '../../application/dtos/register-user.dto';
 import SignInDto from '../../application/dtos/sign-in.dto';
 import { TokenService } from './token.service';
 import { comparePassword } from '../../shared/utils/hash-password.util';
-import UserRepositoryImpl from '../database/user.repository.impl';
-import UserMapper from '../../application/mappers/user.mapper';
 import { TokensResponseDto } from '../../application/dtos/response/login-response.dto';
+import UserRepositoryImpl from '../../domain/repositories/user.repository.impl';
+import UserMapper from '../../domain/mappers/user.mapper';
 
 @Injectable()
 export class AuthService {

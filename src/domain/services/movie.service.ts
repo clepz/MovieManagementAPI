@@ -1,8 +1,8 @@
 import { Injectable } from '@nestjs/common';
 import Movie from '../entities/movie.entity';
-import MovieRepositoryImpl from '../../infrastructure/database/movie.repository.impl';
 import { ModifyMovieDto } from '../../application/dtos/modify-movie.dto';
-import MovieMapper from '../../application/mappers/movie.mapper';
+import MovieRepositoryImpl from '../repositories/movie.repository.impl';
+import MovieMapper from '../mappers/movie.mapper';
 
 @Injectable()
 export default class MovieService {

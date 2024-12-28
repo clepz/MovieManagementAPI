@@ -9,7 +9,7 @@ import { AtStrategy } from './strategies/at.strategy';
 import { RtStrategy } from './strategies/rt.strategy';
 import { JwtService } from '@nestjs/jwt';
 import { AuthController } from './auth.controller';
-import UserRepositoryImpl from '../database/user.repository.impl';
+import UserRepositoryImpl from '../../domain/repositories/user.repository.impl';
 
 @Module({
     imports: [TypeOrmModule.forFeature([User])],

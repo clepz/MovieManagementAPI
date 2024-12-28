@@ -1,6 +1,6 @@
-const enum ROLE {
-    manager = 'manager',
-    customer = 'customer',
+const enum Role {
+    MANAGER = 'manager',
+    CUSTOMER = 'customer',
 }
 
-export default ROLE;
+export default Role;
