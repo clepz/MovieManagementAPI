@@ -67,13 +67,17 @@ export default class MovieSessionService {
         }
 
         try {
-            return await this.movieSessionRepository.updateById(
+            const ret = await this.movieSessionRepository.updateById(
                 id,
                 MovieSessionMapper.fromModifiedMovieSessionDto(
                     modifiedMovieSession,
                     userId,
                 ),
             );
+            if (!ret) {
+                throw new NotFoundException('Movie session not found');
+            }
+            return true;
         } catch (error) {
             if (error.code === DbErrorCode.UNIQUE_VIOLATION) {
                 movieSessionUniqueViolationMessageExtractAndThrow(error);

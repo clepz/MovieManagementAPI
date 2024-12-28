@@ -1,7 +1,7 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { Expose, Type } from 'class-transformer';
 
-export class IndivialOperationResponseDto {
+export class IndividualOperationResponseDto {
     @ApiProperty()
     @Expose()
     success: boolean;
@@ -12,8 +12,8 @@ export class IndivialOperationResponseDto {
 }
 
 export class BulkOperationResponseDto {
-    @ApiProperty({ type: IndivialOperationResponseDto, isArray: true })
-    @Type(() => IndivialOperationResponseDto)
+    @ApiProperty({ type: IndividualOperationResponseDto, isArray: true })
+    @Type(() => IndividualOperationResponseDto)
     @Expose()
-    results: IndivialOperationResponseDto[];
+    results: IndividualOperationResponseDto[];
 }

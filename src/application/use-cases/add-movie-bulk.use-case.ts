@@ -2,7 +2,7 @@ import { HttpException, Injectable } from '@nestjs/common';
 import { AddMovieDto } from '../dtos/add-movie.dto';
 import {
     BulkOperationResponseDto,
-    IndivialOperationResponseDto,
+    IndividualOperationResponseDto,
 } from '../dtos/response/bulk-operation.dto';
 import AddMovieUseCase from './add-movie.use-case';
 
@@ -28,7 +28,7 @@ export default class AddMovieBulkUseCase {
             return {
                 success: result.status === 'fulfilled',
                 message: errMsg,
-            } as IndivialOperationResponseDto;
+            } as IndividualOperationResponseDto;
         });
         return { results };
     }

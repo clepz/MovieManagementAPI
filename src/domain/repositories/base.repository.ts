@@ -23,9 +23,10 @@ export default abstract class BaseRepository<T extends BaseEntityModel> {
         }
         return this.repository.save(entity);
     }
-    async updateById(id: string, entity: Partial<T>): Promise<UpdateResult> {
+    async updateById(id: string, entity: Partial<T>): Promise<boolean> {
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        return this.repository.update(id, entity as any); // this is a known type issue in typeorm https://github.com/typeorm/typeorm/issues/2904
+        const ret = await this.repository.update(id, entity as any); // this is a known type issue in typeorm https://github.com/typeorm/typeorm/issues/2904
+        return ret.affected ? true : false;
     }
 
     // removing entity from the database can be dangerous. So each repository should expose this method manually

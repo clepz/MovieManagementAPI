@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import Movie from '../entities/movie.entity';
 import { ModifyMovieDto } from '../../application/dtos/modify-movie.dto';
 import MovieRepositoryImpl from '../repositories/movie.repository.impl';
@@ -23,10 +23,14 @@ export default class MovieService {
         id: string,
         modifiedMovie: ModifyMovieDto,
         userId: string,
-    ): Promise<void> {
-        await this.movieRepository.updateById(
+    ): Promise<boolean> {
+        const ret = await this.movieRepository.updateById(
             id,
             MovieMapper.fromModifyMovieDto(modifiedMovie, userId),
         );
+        if (!ret) {
+            throw new NotFoundException('Movie not found');
+        }
+        return true;
     }
 }

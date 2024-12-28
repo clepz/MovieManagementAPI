@@ -16,7 +16,9 @@ import {
     ApiBearerAuth,
     ApiBody,
     ApiConflictResponse,
+    ApiCreatedResponse,
     ApiNoContentResponse,
+    ApiNotFoundResponse,
     ApiParam,
     ApiResponse,
 } from '@nestjs/swagger';
@@ -43,6 +45,7 @@ export class MoviesController {
     ) {}
 
     @ApiBearerAuth()
+    @ApiCreatedResponse({ description: 'Movie created' })
     @ApiBadRequestResponse({ description: 'Bad Request' })
     @ApiConflictResponse({
         description: 'There is another movie session that conflicts',
@@ -73,6 +76,8 @@ export class MoviesController {
     }
 
     @ApiBearerAuth()
+    @ApiNoContentResponse({ description: 'Movie deleted' })
+    @ApiNotFoundResponse({ description: 'Movie not found' })
     @ApiParam({ name: 'id', schema: { format: 'uuid' } })
     @Delete('/:id')
     @CheckRole([Role.MANAGER])
@@ -107,6 +112,7 @@ export class MoviesController {
     @ApiBearerAuth()
     @ApiParam({ name: 'id', schema: { format: 'uuid' } })
     @ApiNoContentResponse({ description: 'Movie modified' })
+    @ApiNotFoundResponse({ description: 'Movie not found' })
     @Patch('/:id')
     @CheckRole([Role.MANAGER])
     @HttpCode(HttpStatus.NO_CONTENT)
