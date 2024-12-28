@@ -91,7 +91,6 @@ export class AuthController {
     @Post('refresh')
     @HttpCode(HttpStatus.OK)
     refreshTokens(@GetCurrentUserId() userId: string) {
-        throw new NotFoundException('Not implemented');
         const tokens = this.tokenService.generateToken(userId);
         return plainToInstance(TokensResponseDto, tokens);
     }

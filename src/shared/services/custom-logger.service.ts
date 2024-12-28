@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { Injectable, Inject } from '@nestjs/common';
-import { createLogger, Logger } from 'winston';
+import { Logger } from 'winston';
 import { globalStore } from '../middlewares/correlation-id.middleware';
 
 @Injectable()

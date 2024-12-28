@@ -11,9 +11,6 @@ import { MoviesModule } from './infrastructure/http/modules/movies.module';
 import { TicketsModule } from './infrastructure/http/modules/tickets.module';
 import { APP_FILTER, APP_GUARD } from '@nestjs/core';
 import GeneralExceptionFilter from './infrastructure/http/exception-filters/all-exceptions.filter';
-import { WinstonModule } from 'nest-winston';
-import winstonConfig from './shared/config/logger-config';
-import { LoggerService } from './shared/services/custom-logger.service';
 import { LoggerModule } from './infrastructure/http/modules/logger.module';
 
 @Module({

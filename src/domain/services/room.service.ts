@@ -6,12 +6,12 @@ import RoomsNotExistsException from '../../shared/exceptions/rooms-not-exists.ex
 export default class RoomService {
     constructor(private readonly roomRepository: RoomRepositoryImpl) {}
 
-    async getExistingRooms(roomNumbers: number[]): Promise<number[]> {
-        return await this.roomRepository.getExistingRooms(roomNumbers);
+    async getExistingRooms(): Promise<number[]> {
+        return await this.roomRepository.getExistingRooms();
     }
 
     async checkIfRoomsExistOrThrow(roomNumbers: number[]): Promise<boolean> {
-        const existingRoomNumber = await this.getExistingRooms(roomNumbers);
+        const existingRoomNumber = await this.getExistingRooms();
         const notExistRooms = roomNumbers.filter(
             (roomNumber) => !existingRoomNumber.includes(roomNumber),
         );

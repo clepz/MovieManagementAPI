@@ -15,7 +15,6 @@ import Role from '../../../shared/enums/role.enum';
 import { GetCurrentUserId } from '../decorators/get-current-user-id.decorator';
 import {
     ApiBearerAuth,
-    ApiConflictResponse,
     ApiParam,
     ApiOperation,
     ApiResponse,

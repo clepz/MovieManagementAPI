@@ -1,4 +1,4 @@
-import { BadRequestException, HttpException, Injectable } from '@nestjs/common';
+import { BadRequestException, Injectable } from '@nestjs/common';
 import { RegisterUserDto } from '../../application/dtos/register-user.dto';
 import SignInDto from '../../application/dtos/sign-in.dto';
 import { TokenService } from './token.service';

@@ -1,5 +1,4 @@
 import { configDotenv } from 'dotenv';
-import path from 'path';
 
 // Load environment variables from .env file
 configDotenv();

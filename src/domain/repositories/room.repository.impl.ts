@@ -13,7 +13,7 @@ export default class RoomRepositoryImpl extends BaseRepository<Room> {
         super();
     }
 
-    async getExistingRooms(roomNumbers: number[]): Promise<number[]> {
+    async getExistingRooms(): Promise<number[]> {
         return (await this.repository.find({ select: ['id'] })).map(
             (room) => room.id,
         );
