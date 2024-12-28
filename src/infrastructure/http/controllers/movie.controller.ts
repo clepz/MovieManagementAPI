@@ -10,12 +10,14 @@ import {
     ParseUUIDPipe,
     Patch,
     Post,
+    Query,
 } from '@nestjs/common';
 import {
     ApiBearerAuth,
     ApiBody,
     ApiOperation,
     ApiParam,
+    ApiQuery,
     ApiResponse,
 } from '@nestjs/swagger';
 import { AddMovieDto } from '../../../application/dtos/add-movie.dto';
@@ -38,6 +40,7 @@ import {
     GetMovieSwagger,
     UpdateMovieSwagger,
 } from '../../../shared/swagger/movie.swagger';
+import { GetAllMoviesQueryDto } from '../../../application/dtos/get-all-movies-query.dto';
 
 @Controller('movies')
 export class MoviesController {
@@ -114,8 +117,8 @@ export class MoviesController {
         isArray: true,
     })
     @Get('')
-    async getAllMovies() {
-        const movies = await this.movieService.getAllAvailableMovies();
+    async getAllMovies(@Query() query: GetAllMoviesQueryDto) {
+        const movies = await this.movieService.getAllAvailableMovies(query);
         return movies.map((movie) => plainToInstance(MovieResponseDto, movie));
     }
 

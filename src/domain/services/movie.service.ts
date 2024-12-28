@@ -3,13 +3,32 @@ import Movie from '../entities/movie.entity';
 import { ModifyMovieDto } from '../../application/dtos/modify-movie.dto';
 import MovieRepositoryImpl from '../repositories/movie.repository.impl';
 import MovieMapper from '../mappers/movie.mapper';
+import { GetAllMoviesQueryDto } from '../../application/dtos/get-all-movies-query.dto';
 
 @Injectable()
 export default class MovieService {
     constructor(private readonly movieRepository: MovieRepositoryImpl) {}
 
-    async getAllAvailableMovies(): Promise<Movie[]> {
-        return this.movieRepository.getAllAvailableMovies();
+    async getAllAvailableMovies(query: GetAllMoviesQueryDto): Promise<Movie[]> {
+        const {
+            title,
+            ageRestriction,
+            minAgeRestriction,
+            maxAgeRestriction,
+            sortField,
+            sortOrder,
+        } = query;
+        const filters: Partial<Movie> = {};
+        if (title) filters.title = title;
+        if (ageRestriction) filters.ageRestriction = ageRestriction;
+
+        return this.movieRepository.getAllAvailableMovies(
+            filters,
+            minAgeRestriction,
+            maxAgeRestriction,
+            sortField,
+            sortOrder,
+        );
     }
 
     async getMovieById(id: string, retrieveSessions?: boolean): Promise<Movie> {
