@@ -26,3 +26,11 @@ export const GetTicketsSwagger: ApiCustomSwaggerDoc = {
         },
     },
 };
+
+export const UseTicketSwagger: ApiCustomSwaggerDoc = {
+    PATCH: {
+        operation: {
+            summary: 'Use a ticket to watch a movie',
+        },
+    },
+};

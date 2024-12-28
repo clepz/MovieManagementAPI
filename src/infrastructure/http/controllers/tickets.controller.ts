@@ -2,6 +2,9 @@ import {
     Body,
     Controller,
     Get,
+    Param,
+    ParseUUIDPipe,
+    Patch,
     Post,
     Query,
     UseInterceptors,
@@ -12,6 +15,7 @@ import ViewWatchHistoryUseCase from '../../../application/use-cases/view-watch-h
 import {
     ApiBearerAuth,
     ApiOperation,
+    ApiParam,
     ApiQuery,
     ApiResponse,
 } from '@nestjs/swagger';
@@ -20,17 +24,20 @@ import { AddUserIdIntoBodyInterceptor } from '../interceptors/add-user-id-into-b
 import {
     BuyTicketSwagger,
     GetTicketsSwagger,
+    UseTicketSwagger,
 } from '../../../shared/swagger/tickets.swagger';
 import { plainToInstance } from 'class-transformer';
 import { GetCurrentUserId } from '../decorators/get-current-user-id.decorator';
 import { StatusQueryDto } from '../../../application/dtos/get-tickets-query.dto';
 import { GetTicketsResponseDto } from '../../../application/dtos/response/get-tickets-response.dto';
+import WatchMovieUseCase from '../../../application/use-cases/watch-movie.use-case';
 
 @Controller('tickets')
 export class TicketsController {
     constructor(
         private readonly buyTicketUseCase: BuyTicketUseCase,
         private readonly viewWatchHistoryUseCase: ViewWatchHistoryUseCase,
+        private readonly watchMovieUseCase: WatchMovieUseCase,
     ) {}
 
     // assuming every ticket purchase for the user itself
@@ -66,5 +73,26 @@ export class TicketsController {
         const { status } = query;
         const res = await this.viewWatchHistoryUseCase.execute(status);
         return plainToInstance(GetTicketsResponseDto, res);
+    }
+
+    @ApiBearerAuth()
+    @ApiOperation(UseTicketSwagger.PATCH.operation)
+    @ApiParam({
+        name: 'id',
+        schema: { format: 'uuid' },
+        description: 'Ticket ID',
+    })
+    @Patch(':id')
+    @ApiResponse({ status: 401, description: 'Unauthorized' })
+    @ApiResponse({
+        status: 200,
+        description: 'Ticket used successfully',
+    })
+    @ApiResponse({ status: 404, description: 'Ticket not found' })
+    async useTicket(
+        @Param('id', ParseUUIDPipe) id: string,
+        @GetCurrentUserId() userId: string,
+    ) {
+        await this.watchMovieUseCase.execute(id, userId);
     }
 }

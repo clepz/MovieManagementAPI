@@ -9,6 +9,7 @@ import MovieSessionRepositoryImpl from '../../../domain/repositories/movie-sessi
 import TicketRepositoryImpl from '../../../domain/repositories/ticket.repository';
 import UserRepositoryImpl from '../../../domain/repositories/user.repository.impl';
 import User from '../../../domain/entities/user.entity';
+import WatchMovieUseCase from '../../../application/use-cases/watch-movie.use-case';
 
 @Module({
     imports: [TypeOrmModule.forFeature([Ticket, MovieSession, User])],
@@ -16,6 +17,7 @@ import User from '../../../domain/entities/user.entity';
     providers: [
         BuyTicketUseCase,
         ViewWatchHistoryUseCase,
+        WatchMovieUseCase,
         MovieSessionRepositoryImpl,
         TicketRepositoryImpl,
         UserRepositoryImpl,
