@@ -1,8 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { AddMovieDto } from '../dtos/add-movie.dto';
 import { MovieSessionVO } from '../../domain/value-objects/movie-session.vo';
-import RoomsNotExistsException from '../../shared/exceptions/rooms-not-exists.exception';
-import NotAvailableTimeForMovieSessionException from '../../shared/exceptions/not-available-time-for-movie-session.exception';
 import RoomService from '../../domain/services/room.service';
 import MovieRepositoryImpl from '../../domain/repositories/movie.repository.impl';
 import MovieMapper from '../../domain/mappers/movie.mapper';

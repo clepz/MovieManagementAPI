@@ -1,10 +1,4 @@
-import {
-    DeleteResult,
-    FindOptionsWhere,
-    ObjectLiteral,
-    Repository,
-    UpdateResult,
-} from 'typeorm';
+import { DeleteResult, FindOptionsWhere, Repository } from 'typeorm';
 import BaseEntityModel from '../../domain/entities/base-entity-model';
 
 export default abstract class BaseRepository<T extends BaseEntityModel> {

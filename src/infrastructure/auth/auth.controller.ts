@@ -9,14 +9,7 @@ import {
     UsePipes,
     ValidationPipe,
 } from '@nestjs/common';
-import {
-    ApiBearerAuth,
-    ApiBody,
-    ApiHeader,
-    ApiResponse,
-    ApiSecurity,
-    ApiTags,
-} from '@nestjs/swagger';
+import { ApiBearerAuth, ApiBody, ApiResponse, ApiTags } from '@nestjs/swagger';
 // import { TokenService } from '../../../modules/auth/services/token/token.service';
 import { PasswordHashInterceptor } from '../http/interceptors/password-hash.interceptor';
 import { TokenService } from './token.service';
