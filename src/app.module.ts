@@ -13,9 +13,10 @@ import { APP_FILTER, APP_GUARD } from '@nestjs/core';
 import GeneralExceptionFilter from './infrastructure/http/exception-filters/all-exceptions.filter';
 import { LoggerModule } from './infrastructure/http/modules/logger.module';
 import { HelloController } from './infrastructure/http/controllers/hello.controller';
-import { CorrelationIdMiddleware } from './shared/middlewares/correlation-id.middleware';
+import { CorrelationIdMiddleware } from './infrastructure/http/middlewares/correlation-id.middleware';
 import { HelloService } from './hello/hello.service';
 import throttlerConfig from './shared/config/throttler-config';
+import { RequestLoggingMiddleware } from './infrastructure/http/middlewares/request-logging.middleware';
 
 @Module({
     imports: [
@@ -44,7 +45,7 @@ import throttlerConfig from './shared/config/throttler-config';
 export class AppModule {
     configure(consumer: MiddlewareConsumer) {
         consumer
-            .apply(CorrelationIdMiddleware)
+            .apply(CorrelationIdMiddleware, RequestLoggingMiddleware)
             .forRoutes({ path: '*', method: RequestMethod.ALL });
     }
 }

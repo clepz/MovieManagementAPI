@@ -1,13 +1,10 @@
 import { Injectable, NestMiddleware } from '@nestjs/common';
 import { Request, Response, NextFunction } from 'express';
-import { AsyncLocalStorage } from 'node:async_hooks';
 import { v7 as uuid } from 'uuid';
-
-interface ContextStore {
-    correlationId: string;
-}
-
-export const globalStore = new AsyncLocalStorage<ContextStore>();
+import {
+    ContextStore,
+    correlationIdGlobalStore,
+} from '../../../shared/utils/correlationId-global-store';
 
 @Injectable()
 export class CorrelationIdMiddleware implements NestMiddleware {
@@ -16,7 +13,7 @@ export class CorrelationIdMiddleware implements NestMiddleware {
             (request.headers['x-correlation-id'] as string) ?? uuid();
         const context: ContextStore = { correlationId };
 
-        globalStore.run(context, () => {
+        correlationIdGlobalStore.run(context, () => {
             response.setHeader('x-correlation-id', correlationId);
             next();
         });

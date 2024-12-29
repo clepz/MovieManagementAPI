@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { Injectable, Inject } from '@nestjs/common';
 import { Logger } from 'winston';
-import { globalStore } from '../middlewares/correlation-id.middleware';
+import { correlationIdGlobalStore } from '../utils/correlationId-global-store';
 
 @Injectable()
 export class LoggerService {
@@ -9,12 +9,12 @@ export class LoggerService {
 
     private getLogger() {
         try {
-            const { correlationId } = globalStore.getStore();
+            const { correlationId } = correlationIdGlobalStore.getStore();
             const childLogger = this.rootLogger.child({
                 correlationId,
             });
             return childLogger;
-        } catch (e) {
+        } catch (_e) {
             return this.rootLogger;
         }
     }
