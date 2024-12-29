@@ -1,6 +1,6 @@
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { WinstonModuleAsyncOptions } from 'nest-winston';
-import winston from 'winston';
+import winston, { transport } from 'winston';
 import 'winston-daily-rotate-file';
 
 const levels = {
@@ -57,25 +57,32 @@ const formatFile = winston.format.combine(
     winston.format.splat(),
 );
 
-const options = (configService: ConfigService) => ({
-    daily_file: {
-        filename: 'application-%DATE%.log',
-        datePattern: 'YYYY-MM-DD-HH',
-        dirname: configService.get<string>('log_dir'),
-        level: 'info',
-        zippedArchive: true,
-        maxSize: '20m',
-        maxFiles: '14d',
-        auditFile: `${configService.get<string>('log_dir')}/audit.json`,
-        format: formatFile,
-    },
-    console: {
-        level: configService.get<string>('console_log_level'),
-        json: false,
-        colorize: true,
-        format: formatColored,
-    },
-});
+const options = (configService: ConfigService) => {
+    const consoleLogDisabled = configService.get('disableConsoleLog', {
+        infer: true,
+    });
+    return {
+        daily_file: {
+            filename: 'application-%DATE%.log',
+            datePattern: 'YYYY-MM-DD-HH',
+            dirname: configService.get<string>('log_dir'),
+            level: 'info',
+            zippedArchive: true,
+            maxSize: '20m',
+            maxFiles: '14d',
+            auditFile: `${configService.get<string>('log_dir')}/audit.json`,
+            format: formatFile,
+        },
+        console: consoleLogDisabled
+            ? undefined
+            : {
+                  level: configService.get<string>('console_log_level'),
+                  json: false,
+                  colorize: true,
+                  format: formatColored,
+              },
+    };
+};
 
 winston.addColors(colors);
 
@@ -93,25 +100,33 @@ const rejectionTransport = (configService: ConfigService) =>
 
 const winstonConfig: WinstonModuleAsyncOptions = {
     imports: [ConfigModule],
-    useFactory: async (configService: ConfigService) => ({
-        level: level(configService),
-        levels,
-        transports: [
-            new winston.transports.Console(options(configService).console),
-            new winston.transports.DailyRotateFile(
-                options(configService).daily_file,
-            ),
-        ],
-        exitOnError: false,
-        exceptionHandlers: [
-            exceptionTransport(configService),
-            new winston.transports.Console(options(configService).console),
-        ],
-        rejectionHandlers: [
-            rejectionTransport(configService),
-            new winston.transports.Console(options(configService).console),
-        ],
-    }),
+    useFactory: async (configService: ConfigService) => {
+        const opts = options(configService);
+        const transports: transport[] = [
+            new winston.transports.DailyRotateFile(opts.daily_file),
+        ];
+        if (opts.console) {
+            transports.push(new winston.transports.Console(opts.console));
+        }
+        return {
+            level: level(configService),
+            levels,
+            transports,
+            exitOnError: false,
+            exceptionHandlers: [
+                exceptionTransport(configService),
+                ...(opts.console
+                    ? [new winston.transports.Console(opts.console)]
+                    : []),
+            ],
+            rejectionHandlers: [
+                rejectionTransport(configService),
+                ...(opts.console
+                    ? [new winston.transports.Console(opts.console)]
+                    : []),
+            ],
+        };
+    },
     inject: [ConfigService],
 };
 

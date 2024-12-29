@@ -1,5 +1,5 @@
 import { join } from 'path';
-import { config as dotenvConfig } from 'dotenv';
+import { configDotenv } from 'dotenv';
 import { DataSource, DataSourceOptions } from 'typeorm';
 import typeormConfig from '../src/infrastructure/database/typeorm-config';
 import fs from 'fs';
@@ -7,7 +7,7 @@ import { NestFactory } from '@nestjs/core';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import appConfiguration from '../src/shared/config/configuration';
 
-dotenvConfig({ path: join(__dirname, '../.env.test') });
+configDotenv({ path: join(__dirname, '../.env.test') });
 
 module.exports = async () => {
     // Create a Nest application context to initialize the ConfigService

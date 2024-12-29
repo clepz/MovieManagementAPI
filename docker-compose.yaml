@@ -20,7 +20,7 @@ services:
       POSTGRES_USER: ${DB_USER}
       POSTGRES_PASSWORD: ${DB_PASSWORD}
     ports:
-      - "5432:5432"
+      - "2345:5432"
 
   app_e2e_test:
     profiles: ["test"]

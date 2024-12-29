@@ -20,6 +20,7 @@ jobs:
       DB_PASSWORD: test_password
       DB_HOST: localhost
       DB_PORT: 5432
+      DISABLE_CONSOLE_LOG: true
 
     services:
       postgres:

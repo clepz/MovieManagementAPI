@@ -25,6 +25,7 @@ interface Config {
     refresh_token_expires_in: string;
     log_dir: string;
     console_log_level: string;
+    disableConsoleLog: boolean;
 }
 
 const requiredEnvVars = [
@@ -75,6 +76,8 @@ const appConfiguration: Config = {
         'CONSOLE_LOG_LEVEL',
         getEnvVar('NODE_ENV') !== 'production' ? 'debug' : 'info',
     ),
+    // have to use different name because nestjs config service returns env variable directly (incase sensitive)
+    disableConsoleLog: getEnvVar('DISABLE_CONSOLE_LOG', 'false') === 'true',
 };
 
 export default () => appConfiguration;
