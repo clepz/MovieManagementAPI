@@ -17,7 +17,7 @@
     "strictBindCallApply": false,
     "forceConsistentCasingInFileNames": false,
     "noFallthroughCasesInSwitch": false,
-    "types": ["jest", "./src/@globals/express"],
+    "types": ["jest", "supertest", "./src/@globals/express"],
     "esModuleInterop": true
   }
 }

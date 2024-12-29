@@ -1,4 +1,4 @@
-import { Module } from '@nestjs/common';
+import { MiddlewareConsumer, Module, RequestMethod } from '@nestjs/common';
 import { UsersModule } from './infrastructure/http/modules/users.module';
 import { AuthModule } from './infrastructure/auth/auth.module';
 import { ConfigModule } from '@nestjs/config';
@@ -12,6 +12,8 @@ import { TicketsModule } from './infrastructure/http/modules/tickets.module';
 import { APP_FILTER, APP_GUARD } from '@nestjs/core';
 import GeneralExceptionFilter from './infrastructure/http/exception-filters/all-exceptions.filter';
 import { LoggerModule } from './infrastructure/http/modules/logger.module';
+import { HelloController } from './infrastructure/http/controllers/hello.controller';
+import { CorrelationIdMiddleware } from './shared/middlewares/correlation-id.middleware';
 
 @Module({
     imports: [
@@ -35,7 +37,7 @@ import { LoggerModule } from './infrastructure/http/modules/logger.module';
         }),
         LoggerModule,
     ],
-    // controllers: [AppController],
+    controllers: [HelloController],
     providers: [
         { provide: APP_GUARD, useClass: ThrottlerBehindProxyGuard },
         {
@@ -44,4 +46,10 @@ import { LoggerModule } from './infrastructure/http/modules/logger.module';
         },
     ],
 })
-export class AppModule {}
+export class AppModule {
+    configure(consumer: MiddlewareConsumer) {
+        consumer
+            .apply(CorrelationIdMiddleware)
+            .forRoutes({ path: '*', method: RequestMethod.ALL });
+    }
+}

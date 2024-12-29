@@ -1,7 +1,12 @@
 import { configDotenv } from 'dotenv';
 
 // Load environment variables from .env file
-configDotenv();
+let envPostfix = '';
+if (process.env.NODE_ENV === 'test') {
+    envPostfix = '.test';
+}
+
+configDotenv({ path: `.env${envPostfix}` });
 
 interface Config {
     env: string;
@@ -12,6 +17,7 @@ interface Config {
         user: string;
         password: string;
         database: string;
+        sync: boolean;
     };
     access_token_secret: string;
     refresh_token_secret: string;
@@ -22,7 +28,7 @@ interface Config {
 }
 
 const requiredEnvVars = [
-    'ENV',
+    'NODE_ENV',
     'ACCESS_TOKEN_SECRET',
     'REFRESH_TOKEN_SECRET',
     'ACCESS_TOKEN_EXPIRES_IN',
@@ -46,7 +52,7 @@ function validateEnvVars() {
 validateEnvVars();
 
 const appConfiguration: Config = {
-    env: getEnvVar('ENV'),
+    env: getEnvVar('NODE_ENV'),
     port: parseInt(getEnvVar('PORT', '3000'), 10),
     database: {
         host: getEnvVar('DB_HOST', 'localhost'),
@@ -54,6 +60,11 @@ const appConfiguration: Config = {
         user: getEnvVar('DB_USER', 'user'),
         password: getEnvVar('DB_PASSWORD', 'password'),
         database: getEnvVar('DB_DB', 'database'),
+        // Permit sync database only if NODE_ENV is not production
+        sync:
+            getEnvVar('NODE_ENV') !== 'production'
+                ? getEnvVar('DB_SYNC', 'false') === 'true'
+                : false,
     },
     access_token_secret: getEnvVar('ACCESS_TOKEN_SECRET'),
     refresh_token_secret: getEnvVar('REFRESH_TOKEN_SECRET'),
@@ -62,7 +73,7 @@ const appConfiguration: Config = {
     log_dir: getEnvVar('LOG_DIR', './logs'),
     console_log_level: getEnvVar(
         'CONSOLE_LOG_LEVEL',
-        getEnvVar('ENV') !== 'production' ? 'debug' : 'info',
+        getEnvVar('NODE_ENV') !== 'production' ? 'debug' : 'info',
     ),
 };
 

@@ -12,7 +12,7 @@ const levels = {
 };
 
 const level = (configService: ConfigService) => {
-    const env = configService.get<string>('env');
+    const env = configService.get<string>('NODE_ENV');
     const isDevelopment = env !== 'production';
     return isDevelopment ? 'debug' : 'warn';
 };

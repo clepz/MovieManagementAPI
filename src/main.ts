@@ -5,14 +5,12 @@ import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 import { NestExpressApplication } from '@nestjs/platform-express';
 import { ClassSerializerInterceptor, ValidationPipe } from '@nestjs/common';
 import { WINSTON_MODULE_NEST_PROVIDER } from 'nest-winston';
-import { withCorrelationId } from './shared/middlewares/correlation-id.middleware';
 
 async function bootstrap() {
     const app = await NestFactory.create<NestExpressApplication>(AppModule);
     app.set('trust proxy', 'loopback'); // Trust requests from the loopback address
     app.enableCors();
     app.use(helmet());
-    app.use(withCorrelationId);
     app.useLogger(app.get(WINSTON_MODULE_NEST_PROVIDER));
     app.setGlobalPrefix('api');
     app.useGlobalPipes(new ValidationPipe());

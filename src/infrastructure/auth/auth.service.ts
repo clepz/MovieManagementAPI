@@ -6,16 +6,27 @@ import { comparePassword } from '../../shared/utils/hash-password.util';
 import { TokensResponseDto } from '../../application/dtos/response/login-response.dto';
 import UserRepositoryImpl from '../../domain/repositories/user.repository.impl';
 import UserMapper from '../../domain/mappers/user.mapper';
+import { ConfigService } from '@nestjs/config';
+import Role from '../../shared/enums/role.enum';
 
 @Injectable()
 export class AuthService {
     constructor(
         private readonly userRepository: UserRepositoryImpl,
         private readonly tokenService: TokenService,
+        private readonly config: ConfigService,
     ) {}
 
     async register(body: RegisterUserDto) {
-        await this.userRepository.save(UserMapper.fromRegisterUserDto(body));
+        const user = UserMapper.fromRegisterUserDto(body);
+        // For testing purposes, we can create a manager user
+        if (
+            this.config.get('NODE_ENV') === 'test' &&
+            body.username.startsWith(Role.MANAGER)
+        ) {
+            user.role = Role.MANAGER;
+        }
+        await this.userRepository.save(user);
     }
 
     async validateUserByPassword(body: SignInDto) {
