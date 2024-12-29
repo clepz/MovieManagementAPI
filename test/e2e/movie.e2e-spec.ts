@@ -2,7 +2,6 @@ import { INestApplication } from '@nestjs/common';
 import request from 'supertest';
 import { v4 as uuid } from 'uuid';
 import getTestingModule from '../testing-module';
-import Movie from '../../src/domain/entities/movie.entity';
 
 describe('MoviesController (e2e)', () => {
     let app: INestApplication;
@@ -66,15 +65,64 @@ describe('MoviesController (e2e)', () => {
     });
 
     it('/movies (GET) - should get all movies', async () => {
+        for (let i = 0; i < 2; i++) {
+            await request(app.getHttpServer())
+                .post('/movies')
+                .set('Authorization', `Bearer ${accessToken}`)
+                .send({
+                    title: `Test Movie ${uuid()}`,
+                    description: 'A test movie description',
+                    ageRestriction: 18,
+                    sessions: [
+                        {
+                            date: '2003-12-30',
+                            time: '10.00-12.00',
+                            roomNumber: i + 1,
+                        },
+                    ],
+                })
+                .expect(201);
+        }
         const response = await request(app.getHttpServer())
             .get('/movies')
             .set('Authorization', `Bearer ${accessToken}`)
             .expect(200);
 
         expect(response.body).toBeInstanceOf(Array);
+        expect(response.body.length).toBeGreaterThanOrEqual(2);
     });
 
     it('/movies/:id (GET) - should get a movie by ID', async () => {
+        const movieTitle = `Test Movie ${uuid()}`;
+        const createResponse = await request(app.getHttpServer())
+            .post('/movies')
+            .set('Authorization', `Bearer ${accessToken}`)
+            .send({
+                title: movieTitle,
+                description: 'A test movie description',
+                ageRestriction: 18,
+                sessions: [
+                    {
+                        date: '2020-12-30',
+                        time: '10.00-12.00',
+                        roomNumber: 1,
+                    },
+                ],
+            })
+            .expect(201);
+
+        expect(createResponse.body?.id).toBeDefined();
+        const movieId = createResponse.body.id as string;
+
+        const response = await request(app.getHttpServer())
+            .get(`/movies/${movieId}`)
+            .set('Authorization', `Bearer ${accessToken}`)
+            .expect(200);
+
+        expect(response.body).toHaveProperty('id', movieId);
+    });
+
+    it('/movies (GET) - should get a movie by title', async () => {
         const movieTitle = `Test Movie ${uuid()}`;
         await request(app.getHttpServer())
             .post('/movies')
@@ -85,7 +133,7 @@ describe('MoviesController (e2e)', () => {
                 ageRestriction: 18,
                 sessions: [
                     {
-                        date: '2023-12-30',
+                        date: '2023-01-06',
                         time: '10.00-12.00',
                         roomNumber: 1,
                     },
@@ -95,28 +143,16 @@ describe('MoviesController (e2e)', () => {
 
         const getAllResponse = await request(app.getHttpServer())
             .get('/movies')
+            .query({ title: movieTitle })
             .set('Authorization', `Bearer ${accessToken}`)
             .expect(200);
         expect(getAllResponse.body).toBeInstanceOf(Array);
-        expect(getAllResponse.body.length).toBeGreaterThan(0);
-        // response must have the movietitle we created
-        const createdMovie = getAllResponse.body.find(
-            (movie: Movie) => movie.title === movieTitle,
-        ) as Movie;
-        expect(createdMovie).toBeDefined();
-        const movieId = createdMovie.id;
-
-        const response = await request(app.getHttpServer())
-            .get(`/movies/${movieId}`)
-            .set('Authorization', `Bearer ${accessToken}`)
-            .expect(200);
-
-        expect(response.body).toHaveProperty('id', movieId);
+        expect(getAllResponse.body[0]).toBeDefined();
     });
 
     it('/movies/:id (PATCH) - should update a movie', async () => {
         const movieTitle = `Test Movie ${uuid()}`;
-        await request(app.getHttpServer())
+        const createResponse = await request(app.getHttpServer())
             .post('/movies')
             .set('Authorization', `Bearer ${accessToken}`)
             .send({
@@ -132,19 +168,8 @@ describe('MoviesController (e2e)', () => {
                 ],
             })
             .expect(201);
-
-        const getAllResponse = await request(app.getHttpServer())
-            .get('/movies')
-            .set('Authorization', `Bearer ${accessToken}`)
-            .expect(200);
-        expect(getAllResponse.body).toBeInstanceOf(Array);
-        expect(getAllResponse.body.length).toBeGreaterThan(0);
-        // response must have the movietitle we created
-        const createdMovie = getAllResponse.body.find(
-            (movie: Movie) => movie.title === movieTitle,
-        ) as Movie;
-        expect(createdMovie).toBeDefined();
-        const movieId = createdMovie.id;
+        expect(createResponse.body?.id).toBeDefined();
+        const movieId = createResponse.body.id as string;
 
         await request(app.getHttpServer())
             .patch(`/movies/${movieId}`)
@@ -163,7 +188,7 @@ describe('MoviesController (e2e)', () => {
     });
 
     it('/movies/:id (DELETE) - should delete a movie', async () => {
-        await request(app.getHttpServer())
+        const createResponse = await request(app.getHttpServer())
             .post('/movies')
             .set('Authorization', `Bearer ${accessToken}`)
             .send({
@@ -180,14 +205,8 @@ describe('MoviesController (e2e)', () => {
             })
             .expect(201);
 
-        const getAllResponse = await request(app.getHttpServer())
-            .get('/movies')
-            .set('Authorization', `Bearer ${accessToken}`)
-            .expect(200);
-        expect(getAllResponse.body).toBeInstanceOf(Array);
-        expect(getAllResponse.body.length).toBeGreaterThan(0);
-
-        const movieId = getAllResponse.body[0].id;
+        expect(createResponse.body?.id).toBeDefined();
+        const movieId = createResponse.body?.id as string;
 
         await request(app.getHttpServer())
             .delete(`/movies/${movieId}`)

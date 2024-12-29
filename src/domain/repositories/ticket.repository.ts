@@ -14,9 +14,12 @@ export default class TicketRepositoryImpl extends BaseRepository<Ticket> {
         super();
     }
 
-    getAllTickets(status?: EntityStatus) {
+    getAllTickets(userId: string, status?: EntityStatus) {
         return this.repository.find({
-            where: status ? { status } : {},
+            where: {
+                userId,
+                status,
+            },
             relations: {
                 session: {
                     movie: true,

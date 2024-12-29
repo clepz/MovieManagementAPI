@@ -1,7 +1,7 @@
 import { MiddlewareConsumer, Module, RequestMethod } from '@nestjs/common';
 import { UsersModule } from './infrastructure/http/modules/users.module';
 import { AuthModule } from './infrastructure/auth/auth.module';
-import { ConfigModule } from '@nestjs/config';
+import { ConfigModule, ConfigService } from '@nestjs/config';
 import appConfiguration from './shared/config/configuration';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import typeormConfig from './infrastructure/database/typeorm-config';
@@ -14,6 +14,7 @@ import GeneralExceptionFilter from './infrastructure/http/exception-filters/all-
 import { LoggerModule } from './infrastructure/http/modules/logger.module';
 import { HelloController } from './infrastructure/http/controllers/hello.controller';
 import { CorrelationIdMiddleware } from './shared/middlewares/correlation-id.middleware';
+import throttlerConfig from './shared/config/throttler-config';
 
 @Module({
     imports: [
@@ -26,15 +27,7 @@ import { CorrelationIdMiddleware } from './shared/middlewares/correlation-id.mid
             isGlobal: true,
         }),
         TypeOrmModule.forRootAsync(typeormConfig),
-        ThrottlerModule.forRoot({
-            throttlers: [
-                {
-                    name: 'default',
-                    limit: 10,
-                    ttl: 1000,
-                },
-            ],
-        }),
+        ThrottlerModule.forRootAsync(throttlerConfig),
         LoggerModule,
     ],
     controllers: [HelloController],

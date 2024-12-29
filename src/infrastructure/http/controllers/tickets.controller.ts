@@ -31,6 +31,7 @@ import { GetCurrentUserId } from '../decorators/get-current-user-id.decorator';
 import { StatusQueryDto } from '../../../application/dtos/get-tickets-query.dto';
 import { GetTicketsResponseDto } from '../../../application/dtos/response/get-tickets-response.dto';
 import WatchMovieUseCase from '../../../application/use-cases/watch-movie.use-case';
+import { BuyTicketResponseDto } from '../../../application/dtos/response/buy-ticket-response.dto';
 
 @Controller('tickets')
 export class TicketsController {
@@ -44,7 +45,11 @@ export class TicketsController {
     @ApiBearerAuth()
     @ApiOperation(BuyTicketSwagger.POST.operation)
     @ApiResponse({ status: 401, description: 'Unauthorized' })
-    @ApiResponse({ status: 201, description: 'Ticket purchased successfully' })
+    @ApiResponse({
+        status: 201,
+        description: 'Ticket purchased successfully',
+        type: BuyTicketResponseDto,
+    })
     @ApiResponse({
         status: 403,
         description: 'User is not allowed to watch this movie',
@@ -52,8 +57,11 @@ export class TicketsController {
     @ApiResponse({ status: 404, description: 'Movie Session not found' })
     @Post('')
     @UseInterceptors(AddUserIdIntoBodyInterceptor)
-    async buyTicket(@Body() buyTicketDto: BuyTicketDto): Promise<void> {
-        await this.buyTicketUseCase.execute(buyTicketDto);
+    async buyTicket(
+        @Body() buyTicketDto: BuyTicketDto,
+    ): Promise<BuyTicketResponseDto> {
+        const createdTicket = await this.buyTicketUseCase.execute(buyTicketDto);
+        return plainToInstance(BuyTicketResponseDto, createdTicket);
     }
 
     @ApiBearerAuth()
@@ -71,7 +79,7 @@ export class TicketsController {
         @Query(new ValidationPipe({ transform: true })) query: StatusQueryDto,
     ) {
         const { status } = query;
-        const res = await this.viewWatchHistoryUseCase.execute(status);
+        const res = await this.viewWatchHistoryUseCase.execute(userId, status);
         return plainToInstance(GetTicketsResponseDto, res);
     }
 

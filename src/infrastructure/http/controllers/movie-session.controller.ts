@@ -2,6 +2,7 @@ import {
     Body,
     Controller,
     Delete,
+    Get,
     HttpCode,
     HttpStatus,
     NotFoundException,
@@ -25,14 +26,56 @@ import { ModifyMovieSessionDto } from '../../../application/dtos/modify-movie-se
 import {
     AddMovieSessionSwagger,
     DeleteMovieSessionSwagger,
-    UpdateMovieSessionSwagger,
+    GetMovieSessionsSwagger,
+    GetMovieSessionSwagger,
+    ModifyMovieSessionSwagger,
 } from '../../../shared/swagger/movie-session.swagger';
+import { MovieSessionResponseDto } from '../../../application/dtos/response/movies-response.dto';
+import { plainToInstance } from 'class-transformer';
 
 @ApiParam({ name: 'movieId', schema: { format: 'uuid' } })
 @Controller('movies/:movieId/sessions')
 export class MovieSessionController {
     constructor(private readonly movieSessionService: MovieSessionService) {}
 
+    @ApiBearerAuth()
+    @Get('')
+    @ApiOperation(GetMovieSessionsSwagger.GET.operation)
+    @ApiResponse({
+        status: 200,
+        description: 'Movie Sessions found',
+        type: MovieSessionResponseDto,
+        isArray: true,
+    })
+    async getAllSessions(
+        @Param('movieId', ParseUUIDPipe) movieId: string,
+    ): Promise<MovieSessionResponseDto[]> {
+        const movieSessions =
+            await this.movieSessionService.getAllSessions(movieId);
+        return plainToInstance(MovieSessionResponseDto, movieSessions);
+    }
+
+    @ApiBearerAuth()
+    @Get(':id')
+    @ApiOperation(GetMovieSessionSwagger.GET.operation)
+    @ApiResponse({
+        status: 200,
+        description: 'Movie Sessions found',
+        type: MovieSessionResponseDto,
+    })
+    @ApiResponse({ status: 404, description: 'Movie Session not found' })
+    async getSession(
+        @Param('id', ParseUUIDPipe) id: string,
+        @Param('movieId', ParseUUIDPipe) movieId: string,
+    ): Promise<MovieSessionResponseDto> {
+        const movieSession = await this.movieSessionService.getSessionById(
+            id,
+            movieId,
+        );
+        return plainToInstance(MovieSessionResponseDto, movieSession);
+    }
+
+    @ApiResponse({ status: 404, description: 'Movie not found' })
     @ApiBearerAuth()
     @ApiOperation(AddMovieSessionSwagger.POST.operation)
     @ApiResponse({ status: 201, description: 'Movie Session created' })
@@ -79,7 +122,7 @@ export class MovieSessionController {
     }
     @ApiBearerAuth()
     @ApiParam({ name: 'id', schema: { format: 'uuid' } })
-    @ApiOperation(UpdateMovieSessionSwagger.PATCH.operation)
+    @ApiOperation(ModifyMovieSessionSwagger.PATCH.operation)
     @ApiResponse({ status: 204, description: 'Movie Session modified' })
     @ApiResponse({ status: 404, description: 'Movie Session not found' })
     @Patch('/:id')

@@ -42,14 +42,12 @@ export default class AddMovieUseCase {
         const movieEntity = MovieMapper.fromAddMovieDto(movie, userId);
 
         try {
-            await this.movieRepository.save(movieEntity);
+            return await this.movieRepository.save(movieEntity);
         } catch (error) {
             if (error.code === DbErrorCode.UNIQUE_VIOLATION) {
                 movieSessionUniqueViolationMessageExtractAndThrow(error);
             }
             throw error;
         }
-
-        return;
     }
 }

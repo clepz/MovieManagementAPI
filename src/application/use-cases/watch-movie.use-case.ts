@@ -1,4 +1,8 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import {
+    BadRequestException,
+    Injectable,
+    NotFoundException,
+} from '@nestjs/common';
 import TicketRepositoryImpl from '../../domain/repositories/ticket.repository';
 import EntityStatus from '../../shared/enums/entity-status.enum';
 
@@ -12,6 +16,9 @@ export default class WatchMovieUseCase {
         }
         if (ticket.userId !== userId) {
             throw new NotFoundException('Ticket not found');
+        }
+        if (ticket.status === EntityStatus.INACTIVE) {
+            throw new BadRequestException('Ticket is already used');
         }
         ticket.status = EntityStatus.INACTIVE;
         ticket.updatedBy = userId;

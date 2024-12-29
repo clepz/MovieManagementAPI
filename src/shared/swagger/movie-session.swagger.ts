@@ -1,5 +1,22 @@
 import ApiCustomSwaggerDoc from '../interfaces/api-custom-swagger-doc.interface';
 
+export const GetMovieSessionsSwagger: ApiCustomSwaggerDoc = {
+    GET: {
+        operation: {
+            summary: 'Get all movie sessions',
+            description: 'Returns all movie sessions for a movie.',
+        },
+    },
+};
+
+export const GetMovieSessionSwagger: ApiCustomSwaggerDoc = {
+    GET: {
+        operation: {
+            summary: 'Get a movie session',
+            description: 'Returns a movie session by its ID.',
+        },
+    },
+};
 export const AddMovieSessionSwagger: ApiCustomSwaggerDoc = {
     POST: {
         operation: {
@@ -19,11 +36,11 @@ export const DeleteMovieSessionSwagger: ApiCustomSwaggerDoc = {
     },
 };
 
-export const UpdateMovieSessionSwagger: ApiCustomSwaggerDoc = {
+export const ModifyMovieSessionSwagger: ApiCustomSwaggerDoc = {
     PATCH: {
         operation: {
-            summary: 'Update a movie session',
-            description: 'Updates a movie session by its ID.',
+            summary: 'Modify a movie session',
+            description: 'Modifys a movie session by its ID.',
         },
     },
 };

@@ -8,6 +8,7 @@ import UserRepositoryImpl from '../../domain/repositories/user.repository.impl';
 import MovieSessionRepositoryImpl from '../../domain/repositories/movie-session.repository.impl';
 import { BuyTicketDto } from '../dtos/buy-ticket.dto';
 import TicketMapper from '../../domain/mappers/ticket.mapper';
+import Ticket from '../../domain/entities/ticket.entity';
 
 @Injectable()
 export default class BuyTicketUseCase {
@@ -16,7 +17,7 @@ export default class BuyTicketUseCase {
         private readonly movieSessionRepository: MovieSessionRepositoryImpl,
         private readonly userRepository: UserRepositoryImpl,
     ) {}
-    async execute(buyTicket: BuyTicketDto): Promise<void> {
+    async execute(buyTicket: BuyTicketDto): Promise<Ticket> {
         const [session, user] = await Promise.all([
             this.movieSessionRepository.findByIdWithMovie(buyTicket.sessionId),
             this.userRepository.findById(buyTicket.userId),
@@ -29,7 +30,7 @@ export default class BuyTicketUseCase {
                 'User is not allowed to watch this movie',
             );
         }
-        await this.ticketRepository.save(
+        return await this.ticketRepository.save(
             TicketMapper.fromBuyTicketDto(buyTicket),
         );
     }

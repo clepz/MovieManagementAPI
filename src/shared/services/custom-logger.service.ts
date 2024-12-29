@@ -8,11 +8,15 @@ export class LoggerService {
     constructor(@Inject('winston') private readonly rootLogger: Logger) {}
 
     private getLogger() {
-        const { correlationId } = globalStore.getStore();
-        const childLogger = this.rootLogger.child({
-            correlationId,
-        });
-        return childLogger;
+        try {
+            const { correlationId } = globalStore.getStore();
+            const childLogger = this.rootLogger.child({
+                correlationId,
+            });
+            return childLogger;
+        } catch (e) {
+            return this.rootLogger;
+        }
     }
 
     info(message: string, meta?: any) {

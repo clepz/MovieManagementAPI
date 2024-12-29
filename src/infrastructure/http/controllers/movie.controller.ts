@@ -54,7 +54,11 @@ export class MoviesController {
     @ApiBearerAuth()
     @ApiOperation(AddMovieSwagger.POST.operation)
     @ApiResponse({ status: 401, description: 'Unauthorized' })
-    @ApiResponse({ status: 201, description: 'Movie created' })
+    @ApiResponse({
+        status: 201,
+        description: 'Movie created',
+        type: MovieResponseDto,
+    })
     @ApiResponse({ status: 400, description: 'Bad Request' })
     @ApiResponse({
         status: 409,
@@ -67,7 +71,8 @@ export class MoviesController {
         @Body() movie: AddMovieDto,
         @GetCurrentUserId() userId: string,
     ) {
-        await this.addMovieUseCase.execute(movie, userId);
+        const createdMovie = await this.addMovieUseCase.execute(movie, userId);
+        return plainToInstance(MovieResponseDto, createdMovie);
     }
 
     @ApiBearerAuth()

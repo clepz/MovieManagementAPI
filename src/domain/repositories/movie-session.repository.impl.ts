@@ -36,4 +36,10 @@ export default class MovieSessionRepositoryImpl extends BaseRepository<MovieSess
             relations: ['movie'],
         });
     }
+
+    async findByMovieId(movieId: string): Promise<MovieSession[]> {
+        return await this.repository.find({
+            where: { movieId },
+        });
+    }
 }

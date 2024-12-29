@@ -14,6 +14,22 @@ export default class MovieSessionService {
         private readonly movieSessionRepository: MovieSessionRepositoryImpl,
         private readonly roomService: RoomService,
     ) {}
+
+    async getSessionById(id: string, movieId: string): Promise<MovieSession> {
+        const session = await this.movieSessionRepository.findByIdAndMovieId(
+            id,
+            movieId,
+        );
+        if (!session) {
+            throw new NotFoundException('Movie session not found');
+        }
+        return session;
+    }
+
+    async getAllSessions(movieId: string): Promise<MovieSession[]> {
+        return this.movieSessionRepository.findByMovieId(movieId);
+    }
+
     async addSession(
         movieId: string,
         movieSession: MovieSessionDto,
