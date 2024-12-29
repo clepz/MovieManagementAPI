@@ -24,7 +24,7 @@ export default class GeneralExceptionFilter implements ExceptionFilter {
             res.status(status).json(response);
             return;
         }
-        // return internal server error
+        //! Must be an alert here to notify.
         res.status(HttpStatus.INTERNAL_SERVER_ERROR).json({
             message: 'Internal Server Error',
             statusCode: HttpStatus.INTERNAL_SERVER_ERROR,

@@ -2,9 +2,7 @@ import {
     Body,
     Controller,
     HttpCode,
-    HttpException,
     HttpStatus,
-    NotFoundException,
     Post,
     UseGuards,
     UseInterceptors,
@@ -12,13 +10,11 @@ import {
     ValidationPipe,
 } from '@nestjs/common';
 import {
-    ApiBadRequestResponse,
     ApiBearerAuth,
     ApiBody,
     ApiOperation,
     ApiResponse,
     ApiTags,
-    ApiTooManyRequestsResponse,
 } from '@nestjs/swagger';
 // import { TokenService } from '../../../modules/auth/services/token/token.service';
 import { PasswordHashInterceptor } from '../http/interceptors/password-hash.interceptor';
