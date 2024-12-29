@@ -52,8 +52,8 @@ export const GetAllMoviesSwagger: ApiCustomSwaggerDoc = {
 export const UpdateMovieSwagger: ApiCustomSwaggerDoc = {
     PATCH: {
         operation: {
-            summary: 'Requires: **manager** role.<br>Update a movie',
-            description: 'Updates a movie by its ID.',
+            summary: 'Modifies a movie by its ID.',
+            description: 'Requires: **manager** role.<br>Update a movie',
         },
     },
 };

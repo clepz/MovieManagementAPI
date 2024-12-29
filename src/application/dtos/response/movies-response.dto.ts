@@ -1,5 +1,6 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { Expose, Type } from 'class-transformer';
+import TimeSlot from '../../../shared/enums/time-slots.enum';
 
 export class MovieSessionResponseDto {
     @ApiProperty({ format: 'uuid' })
@@ -10,11 +11,11 @@ export class MovieSessionResponseDto {
     @Expose()
     date: string;
 
-    @ApiProperty()
+    @ApiProperty({ enum: TimeSlot })
     @Expose()
-    time: string;
+    time: TimeSlot;
 
-    @ApiProperty()
+    @ApiProperty({ type: 'integer', minimum: 1 })
     @Expose()
     roomNumber: number;
 }

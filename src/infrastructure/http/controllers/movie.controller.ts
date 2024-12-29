@@ -17,7 +17,6 @@ import {
     ApiBody,
     ApiOperation,
     ApiParam,
-    ApiQuery,
     ApiResponse,
 } from '@nestjs/swagger';
 import { AddMovieDto } from '../../../application/dtos/add-movie.dto';
@@ -132,7 +131,6 @@ export class MoviesController {
     })
     @ApiResponse({ status: 404, description: 'Movie not found' })
     @ApiParam({ name: 'id', schema: { format: 'uuid' } })
-    @ApiResponse({ type: MovieResponseDto })
     @Get('/:id')
     async getMovie(@Param('id', ParseUUIDPipe) id: string) {
         const movie = await this.movieService.getMovieById(id, true);

@@ -18,7 +18,7 @@ class MovieSessionWithMovieDto extends MovieSessionResponseDto {
 }
 
 export class GetTicketsResponseDto {
-    @ApiProperty()
+    @ApiProperty({ format: 'uuid' })
     @Expose()
     id: string;
 

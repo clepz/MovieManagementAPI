@@ -25,7 +25,11 @@ export class ModifyMovieSessionDto {
     @IsOptional()
     time: TimeSlot;
 
-    @ApiProperty({ description: 'Room number must be an existing roomId' })
+    @ApiProperty({
+        type: 'integer',
+        minimum: 1,
+        description: 'Room number must be an existing roomId',
+    })
     @IsInt()
     @IsPositive()
     @IsOptional()

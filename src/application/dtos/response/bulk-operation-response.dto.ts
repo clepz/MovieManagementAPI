@@ -6,7 +6,10 @@ export class IndividualOperationResponseDto {
     @Expose()
     success: boolean;
 
-    @ApiProperty({ required: false })
+    @ApiProperty({
+        required: false,
+        description: 'Error message if operation failed',
+    })
     @Expose()
     message: string;
 }
