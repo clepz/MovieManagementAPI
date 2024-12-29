@@ -40,21 +40,28 @@ describe('MoviesController (e2e)', () => {
     });
 
     it('/movies (POST) - should create a new movie', async () => {
+        const movie = {
+            title: `Test Movie ${uuid()}`,
+            description: 'A test movie description',
+            ageRestriction: 18,
+            sessions: [
+                {
+                    date: '2023-12-31',
+                    time: '12.00-18.00',
+                    roomNumber: 2,
+                },
+            ],
+        };
         await request(app.getHttpServer())
             .post('/movies')
             .set('Authorization', `Bearer ${accessToken}`)
-            .send({
-                title: `Test Movie ${uuid()}`,
-                description: 'A test movie description',
-                ageRestriction: 18,
-                sessions: [
-                    {
-                        date: '2023-12-31',
-                        time: '10.00-12.00',
-                        roomNumber: 1,
-                    },
-                ],
-            })
+            .send(movie)
+            .expect(400); // Time range is invalid
+        movie.sessions[0].time = '16.00-18.00';
+        await request(app.getHttpServer())
+            .post('/movies')
+            .set('Authorization', `Bearer ${accessToken}`)
+            .send(movie)
             .expect(201);
     });
 
@@ -120,7 +127,7 @@ describe('MoviesController (e2e)', () => {
                     {
                         date: '2023-02-11',
                         time: '10.00-12.00',
-                        roomNumber: 3,
+                        roomNumber: 2,
                     },
                 ],
             })
