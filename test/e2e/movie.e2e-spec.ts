@@ -6,6 +6,7 @@ import getTestingModule from '../testing-module';
 describe('MoviesController (e2e)', () => {
     let app: INestApplication;
     let accessToken: string;
+    let customerAccessToken: string;
 
     beforeAll(async () => {
         app = await getTestingModule();
@@ -31,11 +32,63 @@ describe('MoviesController (e2e)', () => {
             })
             .expect(200);
 
+        // Register a Customer
+        const customerUsername = `customer_${uuid()}`;
+        await request(app.getHttpServer())
+            .post('/auth/register')
+            .send({
+                username: customerUsername,
+                password: 'Customer@1234',
+                age: 30,
+            })
+            .expect(201);
+
+        // Sign in as the Customer
+        const signInResponseCustomer = await request(app.getHttpServer())
+            .post('/auth/signin')
+            .send({
+                username: customerUsername,
+                password: 'Customer@1234',
+            })
+            .expect(200);
+
         accessToken = signInResponse.body.access_token as string;
+        customerAccessToken = signInResponseCustomer.body
+            .access_token as string;
     });
 
     afterAll(async () => {
         await app.close();
+    });
+
+    it('/movies (POST, PATCH, DELETE) - should give forbidden error when trying to add a movie with customer role', async () => {
+        await request(app.getHttpServer())
+            .post('/movies')
+            .set('Authorization', `Bearer ${customerAccessToken}`)
+            .send({
+                title: `Test Movie ${uuid()}`,
+                description: 'A test movie description',
+                ageRestriction: 18,
+                sessions: [
+                    {
+                        date: '2023-12-31',
+                        time: '12.00-18.00',
+                        roomNumber: 2,
+                    },
+                ],
+            })
+            .expect(403);
+        await request(app.getHttpServer())
+            .patch(`/movies/${uuid()}`)
+            .set('Authorization', `Bearer ${customerAccessToken}`)
+            .send({
+                title: 'Updated Test Movie',
+            })
+            .expect(403);
+        await request(app.getHttpServer())
+            .delete(`/movies/${uuid()}`)
+            .set('Authorization', `Bearer ${customerAccessToken}`)
+            .expect(403);
     });
 
     it('/movies (POST) - should create a new movie', async () => {
