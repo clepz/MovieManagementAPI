@@ -1,0 +1,27 @@
+name: Deploy
+
+on:
+  pull_request:
+    branches: 
+      - main
+    types: [closed]
+
+jobs:
+  trigger-deploy:
+    if: ${{ github.event.pull_request.merged }}
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Deploy to Server
+        uses: appleboy/ssh-action@v1.2.0
+        with:
+          host: emsal.ai
+          username: emsal
+          key: ${{ secrets.SSH_PRIVATE_KEY }}
+          script: |
+            cd ~/project
+            git pull origin main
+            docker compose down app
+            docker compose up app -d --build

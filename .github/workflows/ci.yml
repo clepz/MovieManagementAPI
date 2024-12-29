@@ -1,0 +1,56 @@
+name: Run All Tests
+
+on:
+  pull_request:
+    branches:
+      - master
+    types: [opened, synchronize]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    env:
+      NODE_ENV: test
+      ACCESS_TOKEN_SECRET: test_access_token_secret
+      REFRESH_TOKEN_SECRET: test_refresh_token_secret
+      ACCESS_TOKEN_EXPIRES_IN: 15m
+      REFRESH_TOKEN_EXPIRES_IN: 15m
+      DB_DB: postgres
+      DB_USER: test_user
+      DB_PASSWORD: test_password
+      DB_HOST: localhost
+      DB_PORT: 5432
+      DISABLE_CONSOLE_LOG: true
+
+    services:
+      postgres:
+        image: postgres:latest
+        env:
+          POSTGRES_DB: ${{ env.DB_DB }}
+          POSTGRES_USER: ${{ env.DB_USER }}
+          POSTGRES_PASSWORD: ${{ env.DB_PASSWORD }}
+        ports:
+          - 5432:5432
+        options: >-
+          --health-cmd="pg_isready -U test_user" 
+          --health-interval=10s 
+          --health-timeout=5s 
+          --health-retries=5
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: 18
+
+      - name: Install dependencies
+        run: npm install
+
+      - name: Run unit tests
+        run: npm run test
+
+      - name: Run e2e tests
+        run: npm run test:e2e
