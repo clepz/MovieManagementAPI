@@ -1,7 +1,7 @@
 import { MiddlewareConsumer, Module, RequestMethod } from '@nestjs/common';
 import { UsersModule } from './infrastructure/http/modules/users.module';
 import { AuthModule } from './infrastructure/auth/auth.module';
-import { ConfigModule, ConfigService } from '@nestjs/config';
+import { ConfigModule } from '@nestjs/config';
 import appConfiguration from './shared/config/configuration';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import typeormConfig from './infrastructure/database/typeorm-config';
@@ -14,6 +14,7 @@ import GeneralExceptionFilter from './infrastructure/http/exception-filters/all-
 import { LoggerModule } from './infrastructure/http/modules/logger.module';
 import { HelloController } from './infrastructure/http/controllers/hello.controller';
 import { CorrelationIdMiddleware } from './shared/middlewares/correlation-id.middleware';
+import { HelloService } from './hello/hello.service';
 import throttlerConfig from './shared/config/throttler-config';
 
 @Module({
@@ -37,6 +38,7 @@ import throttlerConfig from './shared/config/throttler-config';
             provide: APP_FILTER,
             useClass: GeneralExceptionFilter,
         },
+        HelloService,
     ],
 })
 export class AppModule {
