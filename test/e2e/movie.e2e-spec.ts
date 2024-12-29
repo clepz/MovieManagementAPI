@@ -266,4 +266,50 @@ describe('MoviesController (e2e)', () => {
             })
             .expect(403); // Expecting Forbidden error
     });
+
+    it('/movies/bulk (POST) - should add multiple movies in bulk', async () => {
+        const movies = [
+            {
+                title: `Test Movie ${uuid()}`,
+                description: 'A test movie description',
+                ageRestriction: 18,
+                sessions: [
+                    {
+                        date: '2023-06-13',
+                        time: '12.00-14.00',
+                        roomNumber: 2,
+                    },
+                ],
+            },
+            {
+                title: `Test Movie ${uuid()}`,
+                description: 'A test movie description',
+                ageRestriction: 18,
+                sessions: [
+                    {
+                        date: '2023-06-13',
+                        time: '11.00-14.00', // Invalid time range
+                        roomNumber: 2,
+                        createdAt: new Date().toISOString(),
+                    },
+                ],
+            },
+        ];
+
+        await request(app.getHttpServer())
+            .post('/movies/bulk')
+            .set('Authorization', `Bearer ${accessToken}`)
+            .send(movies)
+            .expect(400); // first request must return 400 because of invalid time range
+        movies[1].sessions[0].time = '12.00-14.00'; // fix the time range
+        const bulkResponse = await request(app.getHttpServer())
+            .post('/movies/bulk')
+            .set('Authorization', `Bearer ${accessToken}`)
+            .send(movies)
+            .expect(201); // second request must return 201 even if one of the movies is invalid
+        expect(bulkResponse.body.results).toBeDefined();
+        expect(bulkResponse.body.results).toHaveLength(2);
+        expect(bulkResponse.body.results[0].success).toBe(true);
+        expect(bulkResponse.body.results[1].success).toBe(false); // this won't be added because of session time conflict
+    });
 });

@@ -7,6 +7,7 @@ import {
     HttpException,
     HttpStatus,
     Param,
+    ParseArrayPipe,
     ParseUUIDPipe,
     Patch,
     Post,
@@ -74,7 +75,7 @@ export class MoviesController {
     @ApiResponse({ status: 401, description: 'Unauthorized' })
     @ApiResponse({
         status: 201,
-        description: 'Movies added in bulk',
+        description: 'Movies added in bulk. Event if only one movie is added.',
         type: BulkOperationResponseDto,
     })
     @ApiResponse({ status: 400, description: 'Bad Request' })
@@ -83,7 +84,7 @@ export class MoviesController {
     @HttpCode(HttpStatus.CREATED)
     @CheckRole([Role.MANAGER])
     async addMovieBulk(
-        @Body() movies: AddMovieDto[],
+        @Body(new ParseArrayPipe({ items: AddMovieDto })) movies: AddMovieDto[],
         @GetCurrentUserId() userId: string,
     ) {
         const result = await this.addMovieBulkUseCase.execute(movies, userId);

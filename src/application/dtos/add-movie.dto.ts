@@ -21,7 +21,6 @@ export class MovieSessionDto {
     date: string;
 
     @ApiProperty({ enum: TimeSlot })
-    @IsString()
     @IsNotEmpty()
     @IsEnum(TimeSlot)
     time: TimeSlot;
