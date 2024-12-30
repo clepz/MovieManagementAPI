@@ -20,7 +20,7 @@ export default class AddMovieUseCase {
 
         // no need to check existing sessions for conflict because the database will throw an error if there is a conflict -> unique constraint on date, time, and room number
         // --- remove duplicate sessions to avoid unique constraint violation
-        movie.sessions = movie.sessions.filter((session) => {
+        movie.sessions = movie.sessions?.filter((session) => {
             roomNumbersSet.add(session.roomNumber);
             const sessionVO = new MovieSessionVO(
                 session.date,

@@ -13,7 +13,7 @@ async function bootstrap() {
     app.use(helmet());
     app.useLogger(app.get(WINSTON_MODULE_NEST_PROVIDER));
     app.setGlobalPrefix('api');
-    app.useGlobalPipes(new ValidationPipe());
+    app.useGlobalPipes(new ValidationPipe({ transform: true }));
     app.useGlobalInterceptors(
         new ClassSerializerInterceptor(app.get(Reflector), {
             strategy: 'excludeAll',

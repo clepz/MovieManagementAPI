@@ -44,7 +44,7 @@ export const GetAllMoviesSwagger: ApiCustomSwaggerDoc = {
         operation: {
             summary: 'Get all available movies',
             description:
-                'Retrieves a list of all movies these have at least one session.',
+                'Retrieves a list of all movies these have at least one session.<br> if the user is a manager and the query parameter `isAvailable` is set to `false`, it will return all movies, regardless of availability.',
         },
     },
 };

@@ -7,12 +7,14 @@ import {
     IsString,
     IsStrongPassword,
     Min,
+    MinLength,
 } from 'class-validator';
 
 export class RegisterUserDto {
-    @ApiProperty()
+    @ApiProperty({ description: 'Username must be at least 4 characters' })
     @IsNotEmpty()
-    @IsLowercase()
+    @IsString()
+    @MinLength(4)
     username: string;
 
     @ApiProperty()

@@ -4,12 +4,16 @@ import { ModifyMovieDto } from '../../application/dtos/modify-movie.dto';
 import MovieRepositoryImpl from '../repositories/movie.repository.impl';
 import MovieMapper from '../mappers/movie.mapper';
 import { GetAllMoviesQueryDto } from '../../application/dtos/get-all-movies-query.dto';
+import Role from '../../shared/enums/role.enum';
 
 @Injectable()
 export default class MovieService {
     constructor(private readonly movieRepository: MovieRepositoryImpl) {}
 
-    async getAllAvailableMovies(query: GetAllMoviesQueryDto): Promise<Movie[]> {
+    async getAllAvailableMovies(
+        query: GetAllMoviesQueryDto,
+        userRole: Role,
+    ): Promise<Movie[]> {
         const {
             title,
             ageRestriction,
@@ -17,6 +21,7 @@ export default class MovieService {
             maxAgeRestriction,
             sortField,
             sortOrder,
+            isAvailable,
         } = query;
         const filters: Partial<Movie> = {};
         if (title) filters.title = title;
@@ -28,6 +33,7 @@ export default class MovieService {
             maxAgeRestriction,
             sortField,
             sortOrder,
+            userRole === Role.MANAGER ? isAvailable : true,
         );
     }
 

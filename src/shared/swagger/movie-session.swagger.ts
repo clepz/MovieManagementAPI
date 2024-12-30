@@ -22,7 +22,7 @@ export const AddMovieSessionSwagger: ApiCustomSwaggerDoc = {
         operation: {
             summary: 'Create a new movie session',
             description:
-                'Creates a new movie session and returns the created session details.',
+                'Creates a new movie session and returns the created session details.<br>Requires **manager** role',
         },
     },
 };
@@ -31,7 +31,8 @@ export const DeleteMovieSessionSwagger: ApiCustomSwaggerDoc = {
     DELETE: {
         operation: {
             summary: 'Delete a movie session',
-            description: 'Deletes a movie session by its ID.',
+            description:
+                'Deletes a movie session by its ID.<br>Requires **manager** role',
         },
     },
 };
@@ -40,7 +41,8 @@ export const ModifyMovieSessionSwagger: ApiCustomSwaggerDoc = {
     PATCH: {
         operation: {
             summary: 'Modify a movie session',
-            description: 'Modifys a movie session by its ID.',
+            description:
+                'Modifys a movie session by its ID.<br>Requires **manager** role',
         },
     },
 };

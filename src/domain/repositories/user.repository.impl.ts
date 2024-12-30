@@ -12,4 +12,8 @@ export default class UserRepositoryImpl extends BaseRepository<User> {
     ) {
         super();
     }
+
+    async findByUsername(username: string): Promise<User> {
+        return this.repository.findOneBy({ username });
+    }
 }

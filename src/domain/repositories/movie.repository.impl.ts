@@ -32,11 +32,14 @@ export default class MovieRepositoryImpl extends BaseRepository<Movie> {
         maxAgeRestriction?: number,
         sortField: MovieQuerySortField = MovieQuerySortField.TITLE,
         sortOrder: SortOrder = SortOrder.ASC,
+        isAvailable = true,
     ): Promise<Movie[]> {
-        const queryBuilder = this.repository
-            .createQueryBuilder('movie')
-            .innerJoinAndSelect('movie.sessions', 'session');
-
+        const queryBuilder = this.repository.createQueryBuilder('movie');
+        if (isAvailable) {
+            queryBuilder.innerJoinAndSelect('movie.sessions', 'session');
+        } else {
+            queryBuilder.leftJoinAndSelect('movie.sessions', 'session');
+        }
         if (filters) {
             Object.keys(filters).forEach((key) => {
                 queryBuilder.andWhere(`movie."${key}" = :${key}`, {
