@@ -51,9 +51,10 @@ export class AddMovieDto {
     @IsPositive()
     ageRestriction: number;
 
-    @ApiProperty({ isArray: true, type: MovieSessionDto })
+    @ApiProperty({ isArray: true, type: MovieSessionDto, required: false })
+    @IsOptional()
     @IsArray()
     @ValidateNested({ each: true })
     @Type(() => MovieSessionDto)
-    sessions: MovieSessionDto[];
+    sessions?: MovieSessionDto[];
 }

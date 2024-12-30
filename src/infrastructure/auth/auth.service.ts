@@ -26,6 +26,12 @@ export class AuthService {
         ) {
             user.role = Role.MANAGER;
         }
+        const existingUser = await this.userRepository.findByUsername(
+            body.username.toLowerCase(),
+        );
+        if (existingUser) {
+            throw new BadRequestException('The username is already taken');
+        }
         await this.userRepository.save(user);
     }
 

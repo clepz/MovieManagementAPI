@@ -10,7 +10,7 @@ export default class MovieMapper {
         movie.title = movieDto.title;
         movie.description = movieDto.description;
         movie.ageRestriction = movieDto.ageRestriction;
-        movie.sessions = movieDto.sessions.map((session) => {
+        movie.sessions = movieDto.sessions?.map((session) => {
             const movieSession = new MovieSession();
             movieSession.date = session.date;
             movieSession.time = session.time;

@@ -12,6 +12,7 @@ import {
     Patch,
     Post,
     Query,
+    Req,
 } from '@nestjs/common';
 import {
     ApiBearerAuth,
@@ -41,6 +42,7 @@ import {
     UpdateMovieSwagger,
 } from '../../../shared/swagger/movie.swagger';
 import { GetAllMoviesQueryDto } from '../../../application/dtos/get-all-movies-query.dto';
+import { Request } from 'express';
 
 @Controller('movies')
 export class MoviesController {
@@ -122,8 +124,14 @@ export class MoviesController {
         isArray: true,
     })
     @Get('')
-    async getAllMovies(@Query() query: GetAllMoviesQueryDto) {
-        const movies = await this.movieService.getAllAvailableMovies(query);
+    async getAllMovies(
+        @Query() query: GetAllMoviesQueryDto,
+        @Req() req: Request,
+    ) {
+        const movies = await this.movieService.getAllAvailableMovies(
+            query,
+            req.user.role,
+        );
         return movies.map((movie) => plainToInstance(MovieResponseDto, movie));
     }
 

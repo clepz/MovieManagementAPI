@@ -1,6 +1,13 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { IsOptional, IsString, IsEnum, IsInt, Min } from 'class-validator';
-import { Type } from 'class-transformer';
+import {
+    IsOptional,
+    IsString,
+    IsEnum,
+    IsInt,
+    Min,
+    IsBoolean,
+} from 'class-validator';
+import { Transform, Type } from 'class-transformer';
 import { SortOrder } from '../../shared/enums/querying.enum';
 
 export enum MovieQuerySortField {
@@ -43,4 +50,15 @@ export class GetAllMoviesQueryDto {
     @IsOptional()
     @IsEnum(SortOrder)
     sortOrder?: SortOrder;
+
+    @ApiProperty({
+        required: false,
+        type: Boolean,
+        description:
+            'If false, will return all movies, regardless of availability. Only managers can see unavailable movies',
+    })
+    @IsOptional()
+    @IsBoolean()
+    @Transform(({ value }) => value?.toLowerCase() === 'true')
+    isAvailable?: boolean;
 }

@@ -46,7 +46,10 @@ export class AuthController {
 
     @ApiBody({ type: RegisterUserDto })
     @ApiResponse({ status: 201, description: 'User registered' })
-    @ApiResponse({ status: 400, description: 'Bad Request' })
+    @ApiResponse({
+        status: 400,
+        description: 'Bad request / The username is already taken',
+    })
     @ApiOperation(RegisterUserSwagger.POST.operation)
     @Post('register')
     @UsePipes(ValidationPipe)
